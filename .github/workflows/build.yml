@@ -9,11 +9,21 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - uses: android-actions/setup-android@v3
-        with:
-          packages: 'platforms;android-33 build-tools;33.0.2'
       - name: Build APK
         run: |
+          # 手动配置 SDK 环境，绕过 broken 的官方插件
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=$ANDROID_HOME
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
+          
+          # 如果 sdkmanager 不存在，则下载，如果存在则直接安装所需组件
+          if [ ! -f "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
+            yes | sdkmanager --licenses || true
+          fi
+          
+          yes | sdkmanager "platforms;android-33" "build-tools;33.0.2" || true
+
+          # 开始编译
           gradle wrapper --gradle-version 7.5
           ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
