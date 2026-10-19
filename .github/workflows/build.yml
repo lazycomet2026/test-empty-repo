@@ -14,8 +14,9 @@ jobs:
           packages: 'platforms;android-33 build-tools;33.0.2'
       - name: Build APK
         run: |
-          # 直接使用云端的 Gradle 执行构建
-          gradle assembleDebug
+          # 关键修复：强制指定 Gradle 7.6 版本，完美兼容 7.4.2 的安卓插件
+          gradle wrapper --gradle-version 7.6
+          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: Github-App
