@@ -1,5 +1,4 @@
 package com.only.github;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.*;
@@ -8,48 +7,36 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class MainActivity extends Activity {
+    private static final String CUSTOM_IP = "20.205.243.166"; 
     private WebView webView;
-    private String currentTargetIp = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         webView = new WebView(this);
+        
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
         
-        // 开启 Cookie 持久化
+        // 开启 Cookie 持久化（这就是你要的记住登录）
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
-        cookieManager.flush();
-
-        // JS 桥接
-        webView.addJavascriptInterface(new Object() {
-            @android.webkit.JavascriptInterface
-            public void loadTarget(String ip) {
-                runOnUiThread(() -> {
-                    currentTargetIp = ip;
-                    webView.loadUrl("https://github.com");
-                });
-            }
-        }, "AndroidBridge");
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                if (!currentTargetIp.isEmpty() && url.contains("github.com")) {
+                if (url.contains("github.com")) {
                     try {
                         URL originalUrl = new URL(url);
-                        URL newUrl = new URL(originalUrl.getProtocol(), currentTargetIp, originalUrl.getPort(), originalUrl.getFile());
+                        URL newUrl = new URL(originalUrl.getProtocol(), CUSTOM_IP, originalUrl.getPort(), originalUrl.getFile());
                         URLConnection conn = newUrl.openConnection();
                         conn.setRequestProperty("Host", originalUrl.getHost());
                         conn.setRequestProperty("User-Agent", view.getSettings().getUserAgentString());
                         
+                        // 带上 Cookie
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) {
                             conn.setRequestProperty("Cookie", cookie);
@@ -67,16 +54,12 @@ public class MainActivity extends Activity {
             }
         });
         
-        webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("https://github.com");
         setContentView(webView);
     }
 
     @Override
     public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
+        if (webView != null && webView.canGoBack()) { webView.goBack(); } else { super.onBackPressed(); }
     }
 }
