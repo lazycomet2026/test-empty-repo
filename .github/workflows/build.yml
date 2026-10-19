@@ -11,12 +11,11 @@ jobs:
           distribution: 'temurin'
       - uses: android-actions/setup-android@v3
         with:
-          packages: 'platforms;android-34 build-tools;34.0.0'
-      - name: Clean and Build
+          packages: 'platforms;android-33 build-tools;33.0.2'
+      - name: Build APK
         run: |
-          gradle clean
-          gradle wrapper --gradle-version 8.5
-          ./gradlew assembleDebug --no-daemon
+          chmod +x gradlew
+          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: Github-App
