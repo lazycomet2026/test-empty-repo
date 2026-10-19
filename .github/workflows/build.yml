@@ -13,19 +13,18 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           
-      - name: Setup Android SDK
+      - name: Install Android SDK
         run: |
           sudo apt-get update
           sudo apt-get install -y android-sdk
-          yes | sdkmanager "platforms;android-30" "build-tools;30.0.3" || true
           
-      - name: Build with Gradle
+      - name: Build APK
         run: |
-          # 强制使用指定的 Gradle 版本
+          # 官方方式拉取 gradle，不依赖 wrapper 下载
           gradle wrapper --gradle-version 7.5
           ./gradlew assembleDebug
           
-      - name: Upload APK
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Github-App
