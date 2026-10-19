@@ -1,31 +1,22 @@
 name: Build APK
 on: [push, workflow_dispatch]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
-        with:
-          # 官方 v4 必须显式声明 packages，否则会去寻找已下架的 tools 包
-          packages: 'platforms;android-33 build-tools;33.0.2'
-          
-      - name: Build APK
+      - name: Build
         run: |
-          gradle wrapper --gradle-version 8.0
+          # 官方云端默认自带 Android SDK，只需要设置环境变量并编译
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
+          gradle wrapper --gradle-version 7.5
           ./gradlew assembleDebug
-          
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: Github-App
           path: app/build/outputs/apk/debug/app-debug.apk
