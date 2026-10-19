@@ -1,5 +1,4 @@
 package com.only.github;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.*;
@@ -8,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class MainActivity extends Activity {
-    private static final String CUSTOM_IP = "20.205.243.166"; 
+    private static final String CUSTOM_IP = "20.205.243.166";
     private WebView webView;
 
     @Override
@@ -42,13 +41,8 @@ public class MainActivity extends Activity {
         webView.loadUrl("https://github.com");
         setContentView(webView);
     }
-
     @Override
     public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
+        if (webView.canGoBack()) webView.goBack(); else super.onBackPressed();
     }
 }
