@@ -2,154 +2,111 @@ package com.github.pro.max;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.webkit.*;
-import android.content.Intent;
-import android.net.Uri;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Map;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
-import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends Activity {
     private WebView webView;
-    private String[] ipList = {
+    private List<String> ipList = Arrays.asList(
         "140.82.112.4", "140.82.113.4", "140.82.114.4",
         "140.82.116.3", "20.205.243.166", "20.205.243.168"
-    };
+    );
     private int currentIpIndex = 0;
+    private String currentIp = ipList.get(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 全局信任所有 SSL 证书
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-                }
-            };
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-        } catch (Exception e) {}
-
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
+        
+        // 开启所有浏览器该有的特性
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
-        settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
         settings.setSupportMultipleWindows(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        
+        // 使用标准的移动端 UA
+        settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
         cookieManager.flush();
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
-                WebView.HitTestResult result = view.getHitTestResult();
-                String data = result.getExtra();
-                if (data != null) webView.loadUrl(data);
-                return false;
-            }
-        });
+        webView.setWebChromeClient(new WebChromeClient());
 
         webView.setWebViewClient(new WebViewClient() {
+            // 【核心1】强制忽略 SSL 证书错误，解决用 IP 访问时的证书不匹配白屏
             @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                String url = request.getUrl().toString();
-                if (!"GET".equals(request.getMethod())) return super.shouldInterceptRequest(view, request);
-
-                if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
-                    try {
-                        URL originalUrl = new URL(url);
-                        String host = originalUrl.getHost();
-                        URL newUrl = new URL(originalUrl.getProtocol(), ipList[currentIpIndex], originalUrl.getPort(), originalUrl.getFile());
-                        HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
-                        
-                        conn.setInstanceFollowRedirects(true);
-                        conn.setConnectTimeout(8000);
-                        conn.setReadTimeout(8000);
-                        
-                        // 透传所有请求头
-                        for (Map.Entry<String, String> header : request.getRequestHeaders().entrySet()) {
-                            if (!header.getKey().equalsIgnoreCase("Host") && !header.getKey().equalsIgnoreCase("Accept-Encoding")) {
-                                conn.setRequestProperty(header.getKey(), header.getValue());
-                            }
-                        }
-                        conn.setRequestProperty("Host", host);
-                        conn.setRequestProperty("Accept-Encoding", "identity"); // 防止压缩乱码
-                        
-                        String cookie = CookieManager.getInstance().getCookie(url);
-                        if (cookie != null) conn.setRequestProperty("Cookie", cookie);
-                        
-                        InputStream is = conn.getInputStream();
-                        
-                        // 【核心修复】强制判定 MIME 类型
-                        String mimeType = conn.getContentType();
-                        if (mimeType == null || mimeType.contains("text/plain")) {
-                            if (url.endsWith(".css")) mimeType = "text/css";
-                            else if (url.endsWith(".js")) mimeType = "application/javascript";
-                            else if (url.endsWith(".png")) mimeType = "image/png";
-                            else if (url.endsWith(".jpg") || url.endsWith(".jpeg")) mimeType = "image/jpeg";
-                            else if (url.endsWith(".svg")) mimeType = "image/svg+xml";
-                            else if (url.endsWith(".woff2")) mimeType = "font/woff2";
-                            else if (url.endsWith(".ico")) mimeType = "image/x-icon";
-                            else mimeType = "text/html"; // 兜底
-                        }
-                        
-                        // 如果是主页面，强制 text/html
-                        if (request.isForMainFrame()) {
-                            mimeType = "text/html";
-                        }
-                        
-                        return new WebResourceResponse(mimeType, "utf-8", is);
-                    } catch (Exception e) {
-                        // 失败放行
-                    }
-                }
-                return super.shouldInterceptRequest(view, request);
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
             }
 
+            // 【核心2】只拦截主框架的 URL 跳转，把 github.com 替换成 IP
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url.contains("github.com")) {
+                    String newUrl = url.replace("github.com", currentIp);
+                    view.loadUrl(newUrl);
+                    return true;
+                }
+                return false;
+            }
+
+            // 【核心3】当页面加载完成后，注入 JS 强制替换所有内部绝对路径
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                // 利用 JS 把 DOM 里残留的 github.com 链接统统换成 IP
+                String js = "javascript:(function() {" +
+                        "var ip = '" + currentIp + "';" +
+                        "var links = document.querySelectorAll('a');" +
+                        "for(var i=0; i<links.length; i++) {" +
+                        "  if(links[i].href.includes('github.com')) {" +
+                        "    links[i].href = links[i].href.replace('github.com', ip);" +
+                        "  }" +
+                        "}" +
+                        "})()";
+                view.evaluateJavascript(js, null);
+            }
+
+            // 加载失败时切换下一个 IP
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 if (request.isForMainFrame()) {
-                    if (currentIpIndex < ipList.length - 1) {
+                    if (currentIpIndex < ipList.size() - 1) {
                         currentIpIndex++;
-                        webView.loadUrl("https://github.com");
+                        currentIp = ipList.get(currentIpIndex);
+                        webView.loadUrl("https://" + currentIp);
                     } else {
-                        runOnUiThread(() -> {
-                            new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("连接超时")
-                                    .setMessage("当前所有节点均不可用，请检查网络或稍后再试。")
-                                    .setPositiveButton("重试", (dialog, which) -> {
-                                        currentIpIndex = 0;
-                                        webView.loadUrl("https://github.com");
-                                    })
-                                    .setNegativeButton("退出", (dialog, which) -> finish())
-                                    .show();
-                        });
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("连接超时")
+                                .setMessage("当前所有节点均不可用，请检查网络。")
+                                .setPositiveButton("重试", (dialog, which) -> {
+                                    currentIpIndex = 0;
+                                    currentIp = ipList.get(0);
+                                    webView.loadUrl("https://" + currentIp);
+                                })
+                                .setNegativeButton("退出", (dialog, which) -> finish())
+                                .show();
                     }
                 }
             }
         });
         
-        webView.loadUrl("https://github.com");
+        // 直接用 IP 加载，让 WebView 自己去解析
+        webView.loadUrl("https://" + currentIp);
         setContentView(webView);
     }
 
