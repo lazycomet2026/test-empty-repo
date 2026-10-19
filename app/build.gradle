@@ -5,7 +5,6 @@ plugins {
 android {
     namespace 'com.only.github'
     compileSdk 33
-
     defaultConfig {
         applicationId "com.only.github"
         minSdk 21
