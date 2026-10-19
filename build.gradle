@@ -10,13 +10,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    defaultConfig { applicationId "com.only.github"; minSdkVersion 21; targetSdkVersion 30; versionCode 1 }
-}
-
-allprojects {
-    repositories {
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        google()
-        mavenCentral()
+    defaultConfig { 
+        applicationId "com.only.github"
+        minSdkVersion 21 
+        targetSdkVersion 30 
+        versionCode 1 
     }
 }
