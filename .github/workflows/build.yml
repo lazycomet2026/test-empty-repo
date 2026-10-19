@@ -14,7 +14,7 @@ jobs:
           packages: 'platforms;android-33 build-tools;33.0.2'
       - name: Build APK
         run: |
-          gradle wrapper --gradle-version 8.0
+          gradle wrapper --gradle-version 8.5
           ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
