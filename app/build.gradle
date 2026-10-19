@@ -8,10 +8,9 @@ android {
         applicationId "com.github.pro.max"
         minSdk 21
         targetSdk 33
-        versionCode 102
-        versionName "102.0"
+        versionCode 104
+        versionName "104.0"
     }
-    // 修复闪退的核心：开启 Java 8 支持
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
