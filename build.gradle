@@ -4,20 +4,20 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // 使用 7.2.1 这个非常稳的插件版本
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
 }
 
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 32
+    namespace 'com.only.github'
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.only.github"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
     }
