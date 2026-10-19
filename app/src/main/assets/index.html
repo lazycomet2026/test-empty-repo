@@ -79,7 +79,6 @@
             document.getElementById('loading').style.display = 'none';
             FRAME.style.display = 'block';
             
-            // 通知原生层去加载
             if (window.AndroidBridge) {
                 window.AndroidBridge.loadTarget(targetIp);
             }
