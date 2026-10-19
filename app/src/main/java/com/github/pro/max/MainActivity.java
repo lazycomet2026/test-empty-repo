@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
-import java.io.ByteArrayInputStream;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -20,8 +18,6 @@ import java.security.SecureRandom;
 
 public class MainActivity extends Activity {
     private WebView webView;
-    
-    // 优质 IP 池
     private String[] ipList = {
         "140.82.112.4", "140.82.113.4", "140.82.114.4",
         "140.82.116.3", "20.205.243.166", "20.205.243.168"
@@ -32,7 +28,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 全局信任 SSL 证书
+        // 全局信任所有 SSL 证书，防止直连 IP 报错导致白屏
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -52,10 +48,10 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
-        
-        // 必须伪装成手机端，否则 GitHub 下发电脑版就会排版错乱
         settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        settings.setSupportMultipleWindows(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -67,9 +63,7 @@ public class MainActivity extends Activity {
             public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
                 WebView.HitTestResult result = view.getHitTestResult();
                 String data = result.getExtra();
-                if (data != null) {
-                    webView.loadUrl(data);
-                }
+                if (data != null) webView.loadUrl(data);
                 return false;
             }
         });
@@ -78,43 +72,39 @@ public class MainActivity extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                // 只拦截主页面，其他的资源让 WebView 自己用系统网络加载
-                if (request.isForMainFrame() && url.contains("github.com")) {
+                if (!"GET".equals(request.getMethod())) return super.shouldInterceptRequest(view, request);
+
+                if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
                     try {
-                        String currentIp = ipList[currentIpIndex];
-                        URL newUrl = new URL("https://" + currentIp + "/");
+                        URL originalUrl = new URL(url);
+                        String host = originalUrl.getHost();
+                        URL newUrl = new URL(originalUrl.getProtocol(), ipList[currentIpIndex], originalUrl.getPort(), originalUrl.getFile());
                         HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
-                        conn.setRequestProperty("Host", "github.com");
-                        conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
-                        conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
-                        conn.setRequestProperty("Accept-Encoding", "identity"); // 绝对不压缩，否则乱码
+                        conn.setConnectTimeout(8000);
+                        conn.setReadTimeout(8000);
+                        
+                        // 透传所有请求头
+                        for (Map.Entry<String, String> header : request.getRequestHeaders().entrySet()) {
+                            if (!header.getKey().equalsIgnoreCase("Host")) {
+                                conn.setRequestProperty(header.getKey(), header.getValue());
+                            }
+                        }
+                        conn.setRequestProperty("Host", host);
+                        
+                        // 【核心修复】强制禁止压缩，防止 CSS/JS 被 gzip 压缩后变成乱码
+                        conn.setRequestProperty("Accept-Encoding", "identity");
+                        
+                        String cookie = CookieManager.getInstance().getCookie(url);
+                        if (cookie != null) conn.setRequestProperty("Cookie", cookie);
                         
                         InputStream is = conn.getInputStream();
+                        String contentType = conn.getContentType();
                         
-                        // 读取出 HTML 源码
-                        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-                        String html = s.hasNext() ? s.next() : "";
-                        
-                        // 【核心黑科技】在 HTML 里强行注入一段 JS，把所有的 github.com 替换成我们的 IP
-                        String js = "<script>" +
-                            "var ip = '" + currentIp + "';" +
-                            "var html = document.documentElement.innerHTML;" +
-                            "html = html.split('github.com').join(ip);" +
-                            "html = html.split('githubassets.com').join(ip);" +
-                            "html = html.split('githubusercontent.com').join(ip);" +
-                            "document.documentElement.innerHTML = html;" +
-                            "</script>";
-                        
-                        if (html.contains("</head>")) {
-                            html = html.replace("</head>", js + "</head>");
-                        } else {
-                            html += js;
-                        }
-                        
-                        return new WebResourceResponse("text/html", "utf-8", new ByteArrayInputStream(html.getBytes("utf-8")));
+                        // 去掉乱码源头
+                        return new WebResourceResponse(contentType, "utf-8", is);
                     } catch (Exception e) {
-                        return null; // 失败就放行，不显示代码
+                        // 失败放行
                     }
                 }
                 return super.shouldInterceptRequest(view, request);
