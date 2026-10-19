@@ -1,4 +1,6 @@
-plugins { id 'com.android.application' }
+plugins {
+    id 'com.android.application'
+}
 android {
     namespace 'com.github.pro.max'
     compileSdk 33
@@ -6,7 +8,12 @@ android {
         applicationId "com.github.pro.max"
         minSdk 21
         targetSdk 33
-        versionCode 100
-        versionName "100.0"
+        versionCode 101
+        versionName "101.0"
+    }
+    // 修复闪退的核心：开启 Java 8 支持
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
