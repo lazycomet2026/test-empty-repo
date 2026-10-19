@@ -26,12 +26,16 @@ public class MainActivity extends Activity {
         cookieManager.setAcceptThirdPartyCookies(webView, true);
         cookieManager.flush();
 
+        // 用传统的匿名内部类，绝对兼容所有版本
         webView.addJavascriptInterface(new Object() {
-            @android.webkit.JavascriptInterface
-            public void loadTarget(String ip) {
-                runOnUiThread(() -> {
-                    currentTargetIp = ip;
-                    webView.loadUrl("https://github.com");
+            @JavascriptInterface
+            public void loadTarget(final String ip) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentTargetIp = ip;
+                        webView.loadUrl("https://github.com");
+                    }
                 });
             }
         }, "AndroidBridge");
@@ -39,9 +43,11 @@ public class MainActivity extends Activity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-                String url = request.getUrl().toString();
-                if (!currentTargetIp.isEmpty() && url.contains("github.com")) {
-                    try {
+                try {
+                    if (request.getUrl() == null) return super.shouldInterceptRequest(view, request);
+                    String url = request.getUrl().toString();
+                    
+                    if (!currentTargetIp.isEmpty() && url.contains("github.com")) {
                         URL originalUrl = new URL(url);
                         URL newUrl = new URL(originalUrl.getProtocol(), currentTargetIp, originalUrl.getPort(), originalUrl.getFile());
                         URLConnection conn = newUrl.openConnection();
@@ -59,13 +65,20 @@ public class MainActivity extends Activity {
                         if (contentType == null) contentType = "text/html";
                         if (encoding == null) encoding = "utf-8";
                         return new WebResourceResponse(contentType, encoding, is);
-                    } catch (Exception e) {}
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 return super.shouldInterceptRequest(view, request);
             }
         });
         
-        webView.loadUrl("file:///android_asset/index.html");
+        try {
+            webView.loadUrl("file:///android_asset/index.html");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         setContentView(webView);
     }
 
