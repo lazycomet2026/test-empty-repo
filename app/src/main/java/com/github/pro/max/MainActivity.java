@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.webkit.*;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -27,7 +28,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 全局信任 SSL 证书，防止 IP 直连报错白屏
+        // 1. 全局信任 SSL 证书
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -47,6 +48,7 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
+        settings.setAllowFileAccess(true);
         settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         settings.setSupportMultipleWindows(true);
@@ -57,23 +59,18 @@ public class MainActivity extends Activity {
         cookieManager.setAcceptThirdPartyCookies(webView, true);
         cookieManager.flush();
 
-        // 加上 WebChromeClient，处理弹窗和 JS 交互
         webView.setWebChromeClient(new WebChromeClient());
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed(); // 强制忽略证书错误
+                handler.proceed();
             }
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                
-                // 放行 POST 等请求，绝对不能碰
-                if (!"GET".equals(request.getMethod())) {
-                    return super.shouldInterceptRequest(view, request);
-                }
+                if (!"GET".equals(request.getMethod())) return super.shouldInterceptRequest(view, request);
 
                 if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
                     try {
@@ -81,14 +78,15 @@ public class MainActivity extends Activity {
                         String host = originalUrl.getHost();
                         String ip = ipList[currentIpIndex];
                         
-                        // 构造真实的底层请求地址
                         URL newUrl = new URL(originalUrl.getProtocol(), ip, originalUrl.getPort(), originalUrl.getFile());
                         HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
+                        // 【核心修复】绝对不让拦截器自动处理重定向，必须交给 WebView 处理，否则相对路径错乱！
+                        conn.setInstanceFollowRedirects(false); 
                         conn.setConnectTimeout(10000);
                         conn.setReadTimeout(10000);
                         
-                        // 完美透传请求头
+                        // 透传请求头
                         Map<String, String> reqHeaders = request.getRequestHeaders();
                         for (Map.Entry<String, String> entry : reqHeaders.entrySet()) {
                             String key = entry.getKey();
@@ -97,16 +95,30 @@ public class MainActivity extends Activity {
                             }
                         }
                         conn.setRequestProperty("Host", host);
-                        conn.setRequestProperty("Accept-Encoding", "identity"); // 强制无压缩防乱码
+                        conn.setRequestProperty("Accept-Encoding", "identity"); // 禁止压缩
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
-                        if (cookie != null) {
-                            conn.setRequestProperty("Cookie", cookie);
+                        if (cookie != null) conn.setRequestProperty("Cookie", cookie);
+                        
+                        int responseCode = conn.getResponseCode();
+                        
+                        // 如果遇到 301/302 重定向，原封不动地传给 WebView
+                        if (responseCode == 301 || responseCode == 302 || responseCode == 307 || responseCode == 308) {
+                            Map<String, String> responseHeaders = new HashMap<>();
+                            String location = conn.getHeaderField("Location");
+                            // 将 Location 里的真实域名/IP 替换成 github.com，让 WebView 继续发起拦截请求
+                            if (location != null) {
+                                if (location.contains(ip)) {
+                                    location = location.replace(ip, "github.com");
+                                }
+                                responseHeaders.put("Location", location);
+                            }
+                            return new WebResourceResponse("text/html", "utf-8", responseCode, "Redirect", responseHeaders, null);
                         }
                         
                         InputStream is = conn.getInputStream();
                         
-                        // 【终极修复】精确解析 MIME 类型和编码，这是解决"源码"和"错位"的绝对核心
+                        // 精确解析 MIME 类型
                         String contentType = conn.getContentType();
                         String mimeType = "text/html";
                         String encoding = "utf-8";
@@ -121,20 +133,15 @@ public class MainActivity extends Activity {
                                 }
                             }
                         } else {
-                            // 如果没拿到 Content-Type，根据后缀兜底
                             if (url.endsWith(".css")) mimeType = "text/css";
                             else if (url.endsWith(".js")) mimeType = "application/javascript";
                             else if (url.endsWith(".png")) mimeType = "image/png";
-                            else if (url.endsWith(".jpg") || url.endsWith(".jpeg")) mimeType = "image/jpeg";
                             else if (url.endsWith(".svg")) mimeType = "image/svg+xml";
-                            else if (url.endsWith(".woff2")) mimeType = "font/woff2";
-                            else if (url.endsWith(".ico")) mimeType = "image/x-icon";
                         }
                         
-                        // 返回完美识别类型的流
                         return new WebResourceResponse(mimeType, encoding, is);
                     } catch (Exception e) {
-                        // 失败放行
+                        // 异常放行
                     }
                 }
                 return super.shouldInterceptRequest(view, request);
@@ -162,7 +169,6 @@ public class MainActivity extends Activity {
             }
         });
         
-        // 用标准域名加载，彻底交给 WebView 渲染
         webView.loadUrl("https://github.com");
         setContentView(webView);
     }
@@ -170,6 +176,8 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) {
+            // 【核心修复】先停止加载，再返回，彻底解决卡死！
+            webView.stopLoading();
             webView.goBack();
         } else {
             super.onBackPressed();
