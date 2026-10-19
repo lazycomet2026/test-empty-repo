@@ -39,7 +39,6 @@ public class MainActivity extends Activity {
                 return super.shouldInterceptRequest(view, request);
             }
         });
-        
         webView.loadUrl("https://github.com");
         setContentView(webView);
     }
