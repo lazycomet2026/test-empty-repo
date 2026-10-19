@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GitHub 专属版</title>
+<title>GitHub</title>
 <style>
     body, html { margin: 0; padding: 0; height: 100%; background: #0d1117; color: #c9d1d9; font-family: sans-serif; }
     iframe { width: 100%; height: 100%; border: none; }
@@ -45,21 +45,19 @@
     <button class="btn" style="background: #da3633;" onclick="closeSettings()">关闭</button>
 </div>
 
-<iframe id="gh-frame" style="display:none;"></iframe>
+<iframe id="gh-frame" style="display:none;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
 
 <script>
-    const IP_LIST = ["140.82.114.3", "20.205.243.166", "140.82.112.4", "140.82.113.4"];
     const FRAME = document.getElementById('gh-frame');
-    let activeIp = "";
-
-    // 模拟测速逻辑（并发请求）
+    
+    // 原生接口桥接
     function pingIp(ip) {
         return new Promise((resolve) => {
             const img = new Image();
             const start = Date.now();
-            const timer = setTimeout(() => { img.src = ""; resolve({ ip, time: 99999 }); }, 2000); // 2秒超时
+            const timer = setTimeout(() => { img.src = ""; resolve({ ip, time: 99999 }); }, 3000); 
             img.onload = () => { clearTimeout(timer); resolve({ ip, time: Date.now() - start }); };
-            img.onerror = () => { clearTimeout(timer); resolve({ ip, time: Date.now() - start }); }; // 错误也算通
+            img.onerror = () => { clearTimeout(timer); resolve({ ip, time: Date.now() - start }); }; 
             img.src = `https://${ip}/favicon.ico?t=${Date.now()}`;
         });
     }
@@ -73,23 +71,21 @@
         document.getElementById('status-text').innerText = "正在寻找最快节点...";
 
         const results = await Promise.all(ips.map(pingIp));
-        // 按延迟排序
         results.sort((a, b) => a.time - b.time);
-
-        // 选出第一个能用的（不是 99999）
         const best = results.find(r => r.time < 99999);
         
         if (best) {
-            activeIp = best.ip;
-            document.getElementById('status-text').innerText = `已连接 (${activeIp})，正在加载...`;
+            const targetIp = best.ip;
+            document.getElementById('status-text').innerText = `已连接 (${targetIp})，正在加载...`;
             document.getElementById('loading').style.display = 'none';
             FRAME.style.display = 'block';
             
-            // 加载页面 (通过 JS 内部替换域名)
-            const targetUrl = "https://" + activeIp;
-            FRAME.src = targetUrl;
+            // 【核心】直接把目标发给 Java 层去渲染
+            // 因为纯网页跨域拦截太难，我们用 Java 劫持请求
+            if (window.AndroidBridge) {
+                window.AndroidBridge.loadTarget(targetIp);
+            }
         } else {
-            // 全部超时
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error').style.display = 'block';
         }
@@ -97,16 +93,12 @@
 
     function openSettings() { document.getElementById('settings-panel').style.display = 'block'; }
     function closeSettings() { document.getElementById('settings-panel').style.display = 'none'; }
+    function saveSettings() { closeSettings(); startPing(); }
 
-    function saveSettings() {
-        // 这里真实情况下应该保存到 localStorage，或者通过接口存到原生
-        // 对于这里直接简单处理
-        closeSettings();
-        startPing();
-    }
-
-    // 页面加载完开始测速
     window.onload = () => {
+        // 恢复设置
+        const savedIps = localStorage.getItem('customIps');
+        if(savedIps) document.getElementById('custom-ips').value = savedIps;
         startPing();
     };
 </script>
