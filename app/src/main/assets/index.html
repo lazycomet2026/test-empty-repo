@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GitHub 专属版</title>
+<style>
+    body, html { margin: 0; padding: 0; height: 100%; background: #0d1117; color: #c9d1d9; font-family: sans-serif; }
+    iframe { width: 100%; height: 100%; border: none; }
+    #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+    .spinner { border: 4px solid #30363d; border-top: 4px solid #3fb950; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    #error { display: none; text-align: center; padding: 20px; }
+    .btn { padding: 10px 20px; background: #238636; color: white; border: none; border-radius: 8px; font-size: 16px; margin-top: 15px; }
+    #settings-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #161b22; z-index: 10000; padding: 20px; box-sizing: border-box; }
+    .setting-item { margin-bottom: 20px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+    input[type="text"] { width: 100%; padding: 10px; margin-top: 10px; background: #0d1117; color: white; border: 1px solid #30363d; border-radius: 6px; box-sizing: border-box; }
+</style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <div id="status-text">正在测试节点连通性...</div>
+</div>
+
+<div id="error">
+    <h2>连接超时</h2>
+    <p style="color: #8b949e;">当前所有节点均不可用，请稍后再试。</p>
+    <button class="btn" onclick="startPing()">重新测试</button>
+    <button class="btn" onclick="openSettings()">进入设置</button>
+</div>
+
+<div id="settings-panel">
+    <h2>设置</h2>
+    <div class="setting-item">
+        <label>自定义 Host/IP (逗号分隔)</label>
+        <input type="text" id="custom-ips" placeholder="例如: 140.82.114.3, 20.205.243.166" value="140.82.114.3, 20.205.243.166, 140.82.112.4">
+    </div>
+    <div class="setting-item">
+        <label>开启悬浮翻译</label>
+        <input type="checkbox" id="trans-toggle" style="width: 20px; height: 20px;">
+    </div>
+    <button class="btn" onclick="saveSettings()">保存并重载</button>
+    <button class="btn" style="background: #da3633;" onclick="closeSettings()">关闭</button>
+</div>
+
+<iframe id="gh-frame" style="display:none;"></iframe>
+
+<script>
+    const IP_LIST = ["140.82.114.3", "20.205.243.166", "140.82.112.4", "140.82.113.4"];
+    const FRAME = document.getElementById('gh-frame');
+    let activeIp = "";
+
+    // 模拟测速逻辑（并发请求）
+    function pingIp(ip) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            const start = Date.now();
+            const timer = setTimeout(() => { img.src = ""; resolve({ ip, time: 99999 }); }, 2000); // 2秒超时
+            img.onload = () => { clearTimeout(timer); resolve({ ip, time: Date.now() - start }); };
+            img.onerror = () => { clearTimeout(timer); resolve({ ip, time: Date.now() - start }); }; // 错误也算通
+            img.src = `https://${ip}/favicon.ico?t=${Date.now()}`;
+        });
+    }
+
+    async function startPing() {
+        document.getElementById('loading').style.display = 'flex';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('gh-frame').style.display = 'none';
+
+        const ips = document.getElementById('custom-ips').value.split(',').map(s => s.trim()).filter(Boolean);
+        document.getElementById('status-text').innerText = "正在寻找最快节点...";
+
+        const results = await Promise.all(ips.map(pingIp));
+        // 按延迟排序
+        results.sort((a, b) => a.time - b.time);
+
+        // 选出第一个能用的（不是 99999）
+        const best = results.find(r => r.time < 99999);
+        
+        if (best) {
+            activeIp = best.ip;
+            document.getElementById('status-text').innerText = `已连接 (${activeIp})，正在加载...`;
+            document.getElementById('loading').style.display = 'none';
+            FRAME.style.display = 'block';
+            
+            // 加载页面 (通过 JS 内部替换域名)
+            const targetUrl = "https://" + activeIp;
+            FRAME.src = targetUrl;
+        } else {
+            // 全部超时
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+    }
+
+    function openSettings() { document.getElementById('settings-panel').style.display = 'block'; }
+    function closeSettings() { document.getElementById('settings-panel').style.display = 'none'; }
+
+    function saveSettings() {
+        // 这里真实情况下应该保存到 localStorage，或者通过接口存到原生
+        // 对于这里直接简单处理
+        closeSettings();
+        startPing();
+    }
+
+    // 页面加载完开始测速
+    window.onload = () => {
+        startPing();
+    };
+</script>
+</body>
+</html>
