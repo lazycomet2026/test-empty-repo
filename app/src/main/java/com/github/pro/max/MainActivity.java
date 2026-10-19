@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // 全局信任所有 SSL 证书，防止直连 IP 报错导致白屏
+        // 全局信任所有 SSL 证书
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -81,28 +81,43 @@ public class MainActivity extends Activity {
                         URL newUrl = new URL(originalUrl.getProtocol(), ipList[currentIpIndex], originalUrl.getPort(), originalUrl.getFile());
                         HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
+                        conn.setInstanceFollowRedirects(true);
                         conn.setConnectTimeout(8000);
                         conn.setReadTimeout(8000);
                         
                         // 透传所有请求头
                         for (Map.Entry<String, String> header : request.getRequestHeaders().entrySet()) {
-                            if (!header.getKey().equalsIgnoreCase("Host")) {
+                            if (!header.getKey().equalsIgnoreCase("Host") && !header.getKey().equalsIgnoreCase("Accept-Encoding")) {
                                 conn.setRequestProperty(header.getKey(), header.getValue());
                             }
                         }
                         conn.setRequestProperty("Host", host);
-                        
-                        // 【核心修复】强制禁止压缩，防止 CSS/JS 被 gzip 压缩后变成乱码
-                        conn.setRequestProperty("Accept-Encoding", "identity");
+                        conn.setRequestProperty("Accept-Encoding", "identity"); // 防止压缩乱码
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) conn.setRequestProperty("Cookie", cookie);
                         
                         InputStream is = conn.getInputStream();
-                        String contentType = conn.getContentType();
                         
-                        // 去掉乱码源头
-                        return new WebResourceResponse(contentType, "utf-8", is);
+                        // 【核心修复】强制判定 MIME 类型
+                        String mimeType = conn.getContentType();
+                        if (mimeType == null || mimeType.contains("text/plain")) {
+                            if (url.endsWith(".css")) mimeType = "text/css";
+                            else if (url.endsWith(".js")) mimeType = "application/javascript";
+                            else if (url.endsWith(".png")) mimeType = "image/png";
+                            else if (url.endsWith(".jpg") || url.endsWith(".jpeg")) mimeType = "image/jpeg";
+                            else if (url.endsWith(".svg")) mimeType = "image/svg+xml";
+                            else if (url.endsWith(".woff2")) mimeType = "font/woff2";
+                            else if (url.endsWith(".ico")) mimeType = "image/x-icon";
+                            else mimeType = "text/html"; // 兜底
+                        }
+                        
+                        // 如果是主页面，强制 text/html
+                        if (request.isForMainFrame()) {
+                            mimeType = "text/html";
+                        }
+                        
+                        return new WebResourceResponse(mimeType, "utf-8", is);
                     } catch (Exception e) {
                         // 失败放行
                     }
