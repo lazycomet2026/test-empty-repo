@@ -7,15 +7,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
       - uses: android-actions/setup-android@v3
         with:
           packages: 'platforms;android-33 build-tools;33.0.2'
       - name: Build APK
         run: |
-          # 关键修复：强制指定 Gradle 7.6 版本，完美兼容 7.4.2 的安卓插件
-          gradle wrapper --gradle-version 7.6
+          gradle wrapper --gradle-version 7.5
           ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
