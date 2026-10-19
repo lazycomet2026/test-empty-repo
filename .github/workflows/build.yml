@@ -11,11 +11,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Setup Android SDK
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y android-sdk
-      - name: Build APK
+      - name: Build with Gradle
         run: |
           gradle wrapper --gradle-version 7.5
           ./gradlew assembleDebug
