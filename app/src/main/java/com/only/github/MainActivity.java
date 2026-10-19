@@ -1,10 +1,8 @@
 package com.only.github;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.webkit.*;
-import android.widget.Toast;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -23,25 +21,24 @@ public class MainActivity extends Activity {
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
         
-        // 【核心】开启 Cookie 持久化（记住登录）
+        // 开启 Cookie 持久化
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
+        cookieManager.flush();
 
-        // 注册 JS 桥接，让前端 HTML 能调用 Java 方法
+        // JS 桥接
         webView.addJavascriptInterface(new Object() {
             @android.webkit.JavascriptInterface
             public void loadTarget(String ip) {
                 runOnUiThread(() -> {
                     currentTargetIp = ip;
-                    // 这里我们直接加载 GitHub
                     webView.loadUrl("https://github.com");
                 });
             }
         }, "AndroidBridge");
 
         webView.setWebViewClient(new WebViewClient() {
-            // 在这里劫持所有请求，把 github.com 替换成我们在前端测速选出来的 IP
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
@@ -53,7 +50,6 @@ public class MainActivity extends Activity {
                         conn.setRequestProperty("Host", originalUrl.getHost());
                         conn.setRequestProperty("User-Agent", view.getSettings().getUserAgentString());
                         
-                        // 把 Cookie 带过去
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) {
                             conn.setRequestProperty("Cookie", cookie);
@@ -71,10 +67,6 @@ public class MainActivity extends Activity {
             }
         });
         
-        // 页面关闭时同步 Cookie
-        cookieManager.flush();
-        
-        // 加载我们本地的启动页面
         webView.loadUrl("file:///android_asset/index.html");
         setContentView(webView);
     }
