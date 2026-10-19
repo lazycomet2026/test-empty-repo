@@ -1,12 +1,12 @@
 plugins { id 'com.android.application' }
 android {
-    namespace 'com.only.github'
+    namespace 'com.github.pro.max'
     compileSdk 33
     defaultConfig {
-        applicationId "com.only.github"
+        applicationId "com.github.pro.max"
         minSdk 21
         targetSdk 33
-        versionCode 30
-        versionName "30.0"
+        versionCode 1
+        versionName "1.0"
     }
 }
