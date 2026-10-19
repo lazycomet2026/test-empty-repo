@@ -14,8 +14,8 @@ jobs:
           packages: 'platforms;android-33 build-tools;33.0.2'
       - name: Build APK
         run: |
-          gradle wrapper --gradle-version 8.0
-          ./gradlew assembleDebug
+          # 直接使用云端的 Gradle 执行构建
+          gradle assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: Github-App
