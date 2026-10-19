@@ -9,12 +9,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-33 build-tools;33.0.2'
+      - name: Build APK
         run: |
-          # 官方云端默认自带 Android SDK，只需要设置环境变量并编译
-          export ANDROID_HOME=/usr/local/lib/android/sdk
-          export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-          gradle wrapper --gradle-version 7.5
+          gradle wrapper --gradle-version 8.0
           ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
