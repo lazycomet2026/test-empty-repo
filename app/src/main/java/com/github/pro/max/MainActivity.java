@@ -9,40 +9,54 @@ import android.net.Uri;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
+import java.security.SecureRandom;
 
 public class MainActivity extends Activity {
     private WebView webView;
     
-    // 【核心更新】扩充为最新的国内实测高可用 IP 池（包含多个网段）
+    // 优质 IP 池
     private String[] ipList = {
-        "140.82.112.4", 
-        "140.82.113.4", 
-        "140.82.114.4", 
-        "140.82.116.3", 
-        "20.205.243.166", 
-        "20.205.243.168",
-        "140.82.114.3",
-        "140.82.112.3"
+        "140.82.112.4", "140.82.113.4", "140.82.114.4",
+        "140.82.116.3", "20.205.243.166", "20.205.243.168"
     };
     private int currentIpIndex = 0;
-
-    // 伪装成移动端 Chrome，获取 GitHub 官方最适配的手机 UI
-    private static final String MOBILE_UA = "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        // 【核心修复1】全局信任所有 SSL 证书，解决直连 IP 时的证书错误，修复 UI 错乱
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                }
+            };
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
         
-        settings.setUserAgentString(MOBILE_UA);
+        // 伪装成手机端 Chrome，让 GitHub 下发完美的手机 UI
+        settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        settings.setSupportMultipleWindows(true);
-        settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
@@ -65,8 +79,6 @@ public class MainActivity extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                
-                // 放行 POST 等非 GET 请求，避免登录或表单提交死锁
                 if (!"GET".equals(request.getMethod())) {
                     return super.shouldInterceptRequest(view, request);
                 }
@@ -74,16 +86,21 @@ public class MainActivity extends Activity {
                 if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
                     try {
                         URL originalUrl = new URL(url);
+                        String host = originalUrl.getHost();
                         URL newUrl = new URL(originalUrl.getProtocol(), ipList[currentIpIndex], originalUrl.getPort(), originalUrl.getFile());
-                        URLConnection conn = newUrl.openConnection();
+                        HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
-                        // 设置合理的连接超时，防止单节点卡死
-                        conn.setConnectTimeout(6000);
-                        conn.setReadTimeout(6000);
+                        conn.setConnectTimeout(8000);
+                        conn.setReadTimeout(8000);
                         
-                        conn.setRequestProperty("Host", originalUrl.getHost());
-                        conn.setRequestProperty("User-Agent", MOBILE_UA);
-                        conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
+                        // 【核心修复2】透传所有请求头，防止 CSS/JS 加载错乱
+                        for (Map.Entry<String, String> header : request.getRequestHeaders().entrySet()) {
+                            if (!header.getKey().equalsIgnoreCase("Host")) {
+                                conn.setRequestProperty(header.getKey(), header.getValue());
+                            }
+                        }
+                        // 强制覆盖 Host 为真实的 github 域名
+                        conn.setRequestProperty("Host", host);
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) {
@@ -95,27 +112,16 @@ public class MainActivity extends Activity {
                         String encoding = conn.getContentEncoding();
                         if (contentType == null) contentType = "text/html";
                         if (encoding == null) encoding = "utf-8";
+                        
+                        // 返回完整数据给 WebView
                         return new WebResourceResponse(contentType, encoding, is);
                     } catch (Exception e) {
-                        // 连接失败放行，交给主框架错误回调处理
+                        // 失败就放行，防止死锁
                     }
                 }
                 return super.shouldInterceptRequest(view, request);
             }
 
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("http://") || url.startsWith("https://")) {
-                    return false;
-                }
-                try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } catch (Exception e) {}
-                return true;
-            }
-
-            // 【核心修复】主框架超时错误时，自动轮询下一个 IP
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
