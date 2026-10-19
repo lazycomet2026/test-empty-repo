@@ -8,8 +8,8 @@ android {
         applicationId "com.github.pro.max"
         minSdk 21
         targetSdk 33
-        versionCode 113
-        versionName "113.0"
+        versionCode 114
+        versionName "114.0"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
