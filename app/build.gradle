@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.application'
+}
+android {
+    namespace 'com.github.ultimate.app'
+    compileSdk 33
+    defaultConfig {
+        applicationId "com.github.ultimate.app"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+dependencies {
+    // 保留 OkHttp 完整网络请求能力，走阿里云镜像绝对能下载
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+}
