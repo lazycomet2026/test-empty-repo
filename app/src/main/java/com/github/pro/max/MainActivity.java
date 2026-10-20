@@ -15,7 +15,6 @@ import android.widget.*;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -37,7 +36,7 @@ public class MainActivity extends Activity {
         autoTranslate = prefs.getBoolean("auto_translate", false);
         currentIp = prefs.getString("custom_ip", "140.82.112.4");
 
-        // 信任所有 SSL 证书
+        // 全局信任所有 SSL 证书
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -58,6 +57,7 @@ public class MainActivity extends Activity {
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
         
+        // 【核心伪装】模拟完美手机端 Chrome
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
@@ -90,52 +90,54 @@ public class MainActivity extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
+                // 非 GET 请求直接放行
                 if (!"GET".equals(request.getMethod())) return super.shouldInterceptRequest(view, request);
 
-                // 只拦截 github 相关域名
                 if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
                     try {
                         URL originalUrl = new URL(url);
                         String host = originalUrl.getHost();
                         
-                        // 替换域名为 IP
                         URL newUrl = new URL(originalUrl.getProtocol(), currentIp, originalUrl.getPort(), originalUrl.getFile());
                         HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
-                        // 超时设置，防止卡死
-                        conn.setConnectTimeout(5000);
-                        conn.setReadTimeout(5000);
-                        conn.setInstanceFollowRedirects(false); 
+                        conn.setConnectTimeout(8000);
+                        conn.setReadTimeout(8000);
+                        conn.setInstanceFollowRedirects(false); // 重定向交给 WebView
                         
-                        // 透传请求头
+                        // 完美透传 Chrome 的请求头
                         for (Map.Entry<String, String> entry : request.getRequestHeaders().entrySet()) {
-                            if (!entry.getKey().equalsIgnoreCase("Host") && !entry.getKey().equalsIgnoreCase("Accept-Encoding")) {
-                                conn.setRequestProperty(entry.getKey(), entry.getValue());
+                            String key = entry.getKey();
+                            if (!key.equalsIgnoreCase("Host") && !key.equalsIgnoreCase("Accept-Encoding")) {
+                                conn.setRequestProperty(key, entry.getValue());
                             }
                         }
                         conn.setRequestProperty("Host", host);
-                        conn.setRequestProperty("Accept-Encoding", "identity"); // 强制不压缩，防乱码
+                        conn.setRequestProperty("Accept-Encoding", "identity"); // 防乱码
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) conn.setRequestProperty("Cookie", cookie);
                         
                         int code = conn.getResponseCode();
                         
-                        // 如果遇到 301/302 重定向，将 Location 换成真实的域名返回给 WebView，让 WebView 自己处理
+                        // 重定向必须完美交还给 WebView
                         if (code == 301 || code == 302 || code == 307 || code == 308) {
-                            Map<String, String> resHeaders = new HashMap<>();
+                            Map<String, String> responseHeaders = new HashMap<>();
                             String location = conn.getHeaderField("Location");
                             if (location != null) {
                                 if (location.contains(currentIp)) {
                                     location = location.replace(currentIp, "github.com");
                                 }
-                                resHeaders.put("Location", location);
+                                responseHeaders.put("Location", location);
                             }
-                            return new WebResourceResponse("text/html", "utf-8", code, conn.getResponseMessage(), resHeaders, null);
+                            return new WebResourceResponse("text/html", "utf-8", code, conn.getResponseMessage(), responseHeaders, null);
                         }
                         
-                        // 【终极修复】绝对不返回其他的 responseHeaders（防 Content-Length 长度不匹配导致页面错乱）
-                        InputStream is = conn.getInputStream();
+                        // 拿数据流
+                        InputStream is = (code >= 400) ? conn.getErrorStream() : conn.getInputStream();
+                        if (is == null) return super.shouldInterceptRequest(view, request);
+                        
+                        // 完美解析 MIME
                         String contentType = conn.getContentType();
                         String mime = "text/html";
                         String enc = "utf-8";
@@ -146,9 +148,11 @@ public class MainActivity extends Activity {
                                 enc = parts[1].split("charset=")[1].trim();
                             }
                         }
+                        
+                        // 【关键】绝对不要把乱七八糟的 responseHeaders 传给 WebView，防止排版错乱
                         return new WebResourceResponse(mime, enc, is);
                     } catch (Exception e) {
-                        // 失败放行
+                        // 出现异常放行，避免死锁
                     }
                 }
                 return super.shouldInterceptRequest(view, request);
@@ -162,13 +166,12 @@ public class MainActivity extends Activity {
 
         rootLayout.addView(webView, new FrameLayout.LayoutParams(-1, -1));
 
-        // 悬浮翻译按钮
+        // 半透明可拖动悬浮球
         TextView transBtn = createFloatingBall("译");
         transBtn.setOnClickListener(v -> doTranslate());
         rootLayout.addView(transBtn);
         makeDraggable(transBtn);
 
-        // 悬浮设置按钮
         TextView setBtn = createFloatingBall("⚙");
         setBtn.setOnClickListener(v -> showSettingsDialog());
         rootLayout.addView(setBtn);
@@ -178,7 +181,6 @@ public class MainActivity extends Activity {
         setContentView(rootLayout);
     }
 
-    // 半透明悬浮球
     private TextView createFloatingBall(String text) {
         TextView tv = new TextView(this);
         tv.setText(text);
@@ -188,28 +190,23 @@ public class MainActivity extends Activity {
         
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.OVAL);
-        shape.setColor(Color.parseColor("#88000000")); // 50% 半透明黑
+        shape.setColor(Color.parseColor("#88000000")); // 半透明
         tv.setBackground(shape);
         
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(120, 120);
         params.gravity = Gravity.TOP | Gravity.START;
-        if (text.equals("译")) {
-            params.setMargins(800, 300, 0, 0); // 初始位置随便放
-        } else {
-            params.setMargins(800, 500, 0, 0);
-        }
+        if (text.equals("译")) params.setMargins(800, 300, 0, 0);
+        else params.setMargins(800, 500, 0, 0);
         tv.setLayoutParams(params);
         return tv;
     }
 
-    // 拖动逻辑
     private void makeDraggable(final View view) {
         view.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
             private int initialY;
             private float initialTouchX;
             private float initialTouchY;
-            private long lastClickTime = 0;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -232,7 +229,6 @@ public class MainActivity extends Activity {
         });
     }
 
-    // 原生设置面板
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("设置");
