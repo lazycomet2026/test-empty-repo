@@ -14,10 +14,8 @@ jobs:
           packages: 'platforms;android-33 build-tools;33.0.2'
       - name: Build APK
         run: |
-          # 【关键】下载并锁死 Gradle 8.5，防止云端用高版本导致崩溃
-          wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
-          unzip -q gradle-8.5-bin.zip
-          ./gradle-8.5/bin/gradle assembleDebug
+          gradle wrapper --gradle-version 8.0
+          ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: Github-App
