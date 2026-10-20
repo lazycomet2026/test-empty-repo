@@ -2,10 +2,10 @@ plugins {
     id 'com.android.application'
 }
 android {
-    namespace 'com.github.final.pro'
+    namespace 'com.github.ultimate.app'
     compileSdk 33
     defaultConfig {
-        applicationId "com.github.final.pro"
+        applicationId "com.github.ultimate.app"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -15,4 +15,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+dependencies {
+    // 引入 OkHttp，专门处理复杂网络请求，保证排版完美
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 }
