@@ -2,14 +2,14 @@ plugins {
     id 'com.android.application'
 }
 android {
-    namespace 'com.github.pro.max'
+    namespace 'com.github.final.pro'
     compileSdk 33
     defaultConfig {
-        applicationId "com.github.pro.max"
+        applicationId "com.github.final.pro"
         minSdk 21
         targetSdk 33
-        versionCode 2000
-        versionName "2000.0"
+        versionCode 1
+        versionName "1.0"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
