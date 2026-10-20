@@ -1,0 +1,24 @@
+name: Build APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-33 build-tools;33.0.2'
+      - name: Build APK
+        run: |
+          # 【关键】下载并锁死 Gradle 8.5，防止云端用高版本导致崩溃
+          wget https://services.gradle.org/distributions/gradle-8.5-bin.zip
+          unzip -q gradle-8.5-bin.zip
+          ./gradle-8.5/bin/gradle assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Github-App
+          path: app/build/outputs/apk/debug/app-debug.apk
