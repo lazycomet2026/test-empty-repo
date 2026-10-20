@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
         
-        // 【核心伪装】模拟完美手机端 Chrome
+        // 完美适配手机端渲染
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
@@ -90,7 +90,6 @@ public class MainActivity extends Activity {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
-                // 非 GET 请求直接放行
                 if (!"GET".equals(request.getMethod())) return super.shouldInterceptRequest(view, request);
 
                 if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
@@ -103,24 +102,23 @@ public class MainActivity extends Activity {
                         
                         conn.setConnectTimeout(8000);
                         conn.setReadTimeout(8000);
-                        conn.setInstanceFollowRedirects(false); // 重定向交给 WebView
+                        conn.setInstanceFollowRedirects(false); 
                         
-                        // 完美透传 Chrome 的请求头
+                        // 完美透传请求头
                         for (Map.Entry<String, String> entry : request.getRequestHeaders().entrySet()) {
-                            String key = entry.getKey();
-                            if (!key.equalsIgnoreCase("Host") && !key.equalsIgnoreCase("Accept-Encoding")) {
-                                conn.setRequestProperty(key, entry.getValue());
+                            if (!entry.getKey().equalsIgnoreCase("Host") && !entry.getKey().equalsIgnoreCase("Accept-Encoding")) {
+                                conn.setRequestProperty(entry.getKey(), entry.getValue());
                             }
                         }
                         conn.setRequestProperty("Host", host);
-                        conn.setRequestProperty("Accept-Encoding", "identity"); // 防乱码
+                        conn.setRequestProperty("Accept-Encoding", "identity");
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) conn.setRequestProperty("Cookie", cookie);
                         
                         int code = conn.getResponseCode();
                         
-                        // 重定向必须完美交还给 WebView
+                        // 重定向处理，保证主页不错乱
                         if (code == 301 || code == 302 || code == 307 || code == 308) {
                             Map<String, String> responseHeaders = new HashMap<>();
                             String location = conn.getHeaderField("Location");
@@ -133,11 +131,8 @@ public class MainActivity extends Activity {
                             return new WebResourceResponse("text/html", "utf-8", code, conn.getResponseMessage(), responseHeaders, null);
                         }
                         
-                        // 拿数据流
-                        InputStream is = (code >= 400) ? conn.getErrorStream() : conn.getInputStream();
-                        if (is == null) return super.shouldInterceptRequest(view, request);
-                        
-                        // 完美解析 MIME
+                        // 【核心】绝对不要传乱七八糟的响应头，只传 MIME 和流
+                        InputStream is = conn.getInputStream();
                         String contentType = conn.getContentType();
                         String mime = "text/html";
                         String enc = "utf-8";
@@ -149,11 +144,8 @@ public class MainActivity extends Activity {
                             }
                         }
                         
-                        // 【关键】绝对不要把乱七八糟的 responseHeaders 传给 WebView，防止排版错乱
                         return new WebResourceResponse(mime, enc, is);
-                    } catch (Exception e) {
-                        // 出现异常放行，避免死锁
-                    }
+                    } catch (Exception e) {}
                 }
                 return super.shouldInterceptRequest(view, request);
             }
@@ -166,7 +158,7 @@ public class MainActivity extends Activity {
 
         rootLayout.addView(webView, new FrameLayout.LayoutParams(-1, -1));
 
-        // 半透明可拖动悬浮球
+        // 悬浮球：半透明，可拖动
         TextView transBtn = createFloatingBall("译");
         transBtn.setOnClickListener(v -> doTranslate());
         rootLayout.addView(transBtn);
@@ -190,7 +182,7 @@ public class MainActivity extends Activity {
         
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.OVAL);
-        shape.setColor(Color.parseColor("#88000000")); // 半透明
+        shape.setColor(Color.parseColor("#66000000")); // 半透明黑色
         tv.setBackground(shape);
         
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(120, 120);
