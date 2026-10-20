@@ -15,6 +15,7 @@ import android.widget.*;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -27,7 +28,7 @@ public class MainActivity extends Activity {
     private WebView webView;
     private SharedPreferences prefs;
     private boolean autoTranslate = false;
-    private String currentIp = "140.82.112.4"; // 默认 IP
+    private String currentIp = "140.82.112.4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class MainActivity extends Activity {
         autoTranslate = prefs.getBoolean("auto_translate", false);
         currentIp = prefs.getString("custom_ip", "140.82.112.4");
 
-        // 全局信任所有 SSL 证书
+        // 信任所有 SSL 证书
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -57,7 +58,6 @@ public class MainActivity extends Activity {
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
         
-        // 完美适配手机端渲染
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        // 使用真实的 Chrome 手机端 UA
         settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36");
 
         CookieManager cookieManager = CookieManager.getInstance();
@@ -96,43 +97,49 @@ public class MainActivity extends Activity {
                     try {
                         URL originalUrl = new URL(url);
                         String host = originalUrl.getHost();
+                        String ipUrl = url.replace(host, currentIp);
                         
-                        URL newUrl = new URL(originalUrl.getProtocol(), currentIp, originalUrl.getPort(), originalUrl.getFile());
+                        URL newUrl = new URL(ipUrl);
                         HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
-                        conn.setConnectTimeout(8000);
-                        conn.setReadTimeout(8000);
+                        conn.setConnectTimeout(10000);
+                        conn.setReadTimeout(10000);
                         conn.setInstanceFollowRedirects(false); 
                         
-                        // 完美透传请求头
+                        // 1. 100% 透传 WebView 的所有请求头，完美伪装成 Chrome
                         for (Map.Entry<String, String> entry : request.getRequestHeaders().entrySet()) {
-                            if (!entry.getKey().equalsIgnoreCase("Host") && !entry.getKey().equalsIgnoreCase("Accept-Encoding")) {
-                                conn.setRequestProperty(entry.getKey(), entry.getValue());
+                            String key = entry.getKey();
+                            if (!key.equalsIgnoreCase("Host") && !key.equalsIgnoreCase("Accept-Encoding")) {
+                                conn.setRequestProperty(key, entry.getValue());
                             }
                         }
+                        // 强行修正 Host 和 Compression
                         conn.setRequestProperty("Host", host);
-                        conn.setRequestProperty("Accept-Encoding", "identity");
+                        conn.setRequestProperty("Accept-Encoding", "identity"); // 获取明文，防止 WebView 二次解压错误
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) conn.setRequestProperty("Cookie", cookie);
                         
                         int code = conn.getResponseCode();
+                        String reasonPhrase = conn.getResponseMessage();
                         
-                        // 重定向处理，保证主页不错乱
-                        if (code == 301 || code == 302 || code == 307 || code == 308) {
-                            Map<String, String> responseHeaders = new HashMap<>();
-                            String location = conn.getHeaderField("Location");
-                            if (location != null) {
-                                if (location.contains(currentIp)) {
-                                    location = location.replace(currentIp, "github.com");
+                        // 2. 100% 透传服务端的所有响应头，绝不过滤
+                        Map<String, String> responseHeaders = new HashMap<>();
+                        for (Map.Entry<String, List<String>> entry : conn.getHeaderFields().entrySet()) {
+                            if (entry.getKey() != null && !entry.getValue().isEmpty()) {
+                                String key = entry.getKey();
+                                String val = entry.getValue().get(0);
+                                if (key.equalsIgnoreCase("Location")) {
+                                    val = val.replace(currentIp, host); // 重定向地址换回原域名
                                 }
-                                responseHeaders.put("Location", location);
+                                responseHeaders.put(key, val);
                             }
-                            return new WebResourceResponse("text/html", "utf-8", code, conn.getResponseMessage(), responseHeaders, null);
                         }
                         
-                        // 【核心】绝对不要传乱七八糟的响应头，只传 MIME 和流
-                        InputStream is = conn.getInputStream();
+                        // 3. 原封不动返回数据流
+                        InputStream is = (code >= 400) ? conn.getErrorStream() : conn.getInputStream();
+                        if (is == null) return super.shouldInterceptRequest(view, request);
+                        
                         String contentType = conn.getContentType();
                         String mime = "text/html";
                         String enc = "utf-8";
@@ -144,21 +151,16 @@ public class MainActivity extends Activity {
                             }
                         }
                         
-                        return new WebResourceResponse(mime, enc, is);
+                        return new WebResourceResponse(mime, enc, code, reasonPhrase, responseHeaders, is);
                     } catch (Exception e) {}
                 }
                 return super.shouldInterceptRequest(view, request);
-            }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
             }
         });
 
         rootLayout.addView(webView, new FrameLayout.LayoutParams(-1, -1));
 
-        // 悬浮球：半透明，可拖动
+        // 半透明悬浮球
         TextView transBtn = createFloatingBall("译");
         transBtn.setOnClickListener(v -> doTranslate());
         rootLayout.addView(transBtn);
@@ -182,7 +184,7 @@ public class MainActivity extends Activity {
         
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.OVAL);
-        shape.setColor(Color.parseColor("#66000000")); // 半透明黑色
+        shape.setColor(Color.parseColor("#80000000")); // 50% 透明黑
         tv.setBackground(shape);
         
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(120, 120);
