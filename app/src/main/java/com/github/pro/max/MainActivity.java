@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.*;
 import android.widget.*;
@@ -27,16 +28,16 @@ public class MainActivity extends Activity {
     private WebView webView;
     private SharedPreferences prefs;
     private boolean autoTranslate = false;
-
-    private String[] ipList = {"140.82.112.4", "140.82.113.4", "140.82.114.4", "20.205.243.166"};
-    private int currentIpIndex = 0;
+    private String currentIp = "140.82.112.4"; // 默认 IP
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs = getSharedPreferences("app_settings", MODE_PRIVATE);
         autoTranslate = prefs.getBoolean("auto_translate", false);
+        currentIp = prefs.getString("custom_ip", "140.82.112.4");
 
+        // 信任所有 SSL 证书
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -51,13 +52,12 @@ public class MainActivity extends Activity {
             HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
         } catch (Exception e) {}
 
-        // 纯全屏 FrameLayout
         FrameLayout rootLayout = new FrameLayout(this);
         rootLayout.setBackgroundColor(Color.parseColor("#0d1117"));
 
-        // 全屏 WebView
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
+        
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
@@ -73,7 +73,6 @@ public class MainActivity extends Activity {
         cookieManager.flush();
 
         webView.setWebChromeClient(new WebChromeClient());
-
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -93,51 +92,50 @@ public class MainActivity extends Activity {
                 String url = request.getUrl().toString();
                 if (!"GET".equals(request.getMethod())) return super.shouldInterceptRequest(view, request);
 
+                // 只拦截 github 相关域名
                 if (url.contains("github.com") || url.contains("githubassets.com") || url.contains("githubusercontent.com")) {
                     try {
                         URL originalUrl = new URL(url);
                         String host = originalUrl.getHost();
-                        String ip = ipList[currentIpIndex];
                         
-                        URL newUrl = new URL(originalUrl.getProtocol(), ip, originalUrl.getPort(), originalUrl.getFile());
+                        // 替换域名为 IP
+                        URL newUrl = new URL(originalUrl.getProtocol(), currentIp, originalUrl.getPort(), originalUrl.getFile());
                         HttpsURLConnection conn = (HttpsURLConnection) newUrl.openConnection();
                         
-                        conn.setConnectTimeout(4000);
-                        conn.setReadTimeout(4000);
-                        conn.setInstanceFollowRedirects(false);
+                        // 超时设置，防止卡死
+                        conn.setConnectTimeout(5000);
+                        conn.setReadTimeout(5000);
+                        conn.setInstanceFollowRedirects(false); 
                         
-                        // 完美透传所有原始请求头
+                        // 透传请求头
                         for (Map.Entry<String, String> entry : request.getRequestHeaders().entrySet()) {
                             if (!entry.getKey().equalsIgnoreCase("Host") && !entry.getKey().equalsIgnoreCase("Accept-Encoding")) {
                                 conn.setRequestProperty(entry.getKey(), entry.getValue());
                             }
                         }
                         conn.setRequestProperty("Host", host);
-                        conn.setRequestProperty("Accept-Encoding", "identity");
+                        conn.setRequestProperty("Accept-Encoding", "identity"); // 强制不压缩，防乱码
                         
                         String cookie = CookieManager.getInstance().getCookie(url);
                         if (cookie != null) conn.setRequestProperty("Cookie", cookie);
                         
                         int code = conn.getResponseCode();
-                        Map<String, String> responseHeaders = new HashMap<>();
                         
-                        // 完美透传响应头（彻底解决主页错位）
-                        for (Map.Entry<String, List<String>> entry : conn.getHeaderFields().entrySet()) {
-                            if (entry.getKey() != null && !entry.getValue().isEmpty()) {
-                                String key = entry.getKey();
-                                String val = entry.getValue().get(0);
-                                if (key.equalsIgnoreCase("Location") && val.contains(ip)) {
-                                    val = val.replace(ip, "github.com");
+                        // 如果遇到 301/302 重定向，将 Location 换成真实的域名返回给 WebView，让 WebView 自己处理
+                        if (code == 301 || code == 302 || code == 307 || code == 308) {
+                            Map<String, String> resHeaders = new HashMap<>();
+                            String location = conn.getHeaderField("Location");
+                            if (location != null) {
+                                if (location.contains(currentIp)) {
+                                    location = location.replace(currentIp, "github.com");
                                 }
-                                if (!key.equalsIgnoreCase("Content-Encoding") && !key.equalsIgnoreCase("Transfer-Encoding")) {
-                                    responseHeaders.put(key, val);
-                                }
+                                resHeaders.put("Location", location);
                             }
+                            return new WebResourceResponse("text/html", "utf-8", code, conn.getResponseMessage(), resHeaders, null);
                         }
                         
-                        InputStream is = (code >= 400) ? conn.getErrorStream() : conn.getInputStream();
-                        if (is == null) return super.shouldInterceptRequest(view, request);
-                        
+                        // 【终极修复】绝对不返回其他的 responseHeaders（防 Content-Length 长度不匹配导致页面错乱）
+                        InputStream is = conn.getInputStream();
                         String contentType = conn.getContentType();
                         String mime = "text/html";
                         String enc = "utf-8";
@@ -148,8 +146,10 @@ public class MainActivity extends Activity {
                                 enc = parts[1].split("charset=")[1].trim();
                             }
                         }
-                        return new WebResourceResponse(mime, enc, code, conn.getResponseMessage(), responseHeaders, is);
-                    } catch (Exception e) {}
+                        return new WebResourceResponse(mime, enc, is);
+                    } catch (Exception e) {
+                        // 失败放行
+                    }
                 }
                 return super.shouldInterceptRequest(view, request);
             }
@@ -157,51 +157,89 @@ public class MainActivity extends Activity {
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                if (request.isForMainFrame() && currentIpIndex < ipList.length - 1) {
-                    currentIpIndex++;
-                    view.stopLoading();
-                    view.loadUrl("https://github.com");
-                }
             }
         });
 
         rootLayout.addView(webView, new FrameLayout.LayoutParams(-1, -1));
 
-        // 悬浮的“翻译”按钮
-        Button transBtn = createFloatingButton("译");
-        FrameLayout.LayoutParams transParams = new FrameLayout.LayoutParams(120, 120);
-        transParams.gravity = Gravity.BOTTOM | Gravity.END;
-        transParams.setMargins(0, 0, 30, 200);
+        // 悬浮翻译按钮
+        TextView transBtn = createFloatingBall("译");
         transBtn.setOnClickListener(v -> doTranslate());
-        rootLayout.addView(transBtn, transParams);
+        rootLayout.addView(transBtn);
+        makeDraggable(transBtn);
 
-        // 悬浮的“设置”按钮
-        Button setBtn = createFloatingButton("⚙");
-        FrameLayout.LayoutParams setParams = new FrameLayout.LayoutParams(120, 120);
-        setParams.gravity = Gravity.BOTTOM | Gravity.END;
-        setParams.setMargins(0, 0, 30, 350);
+        // 悬浮设置按钮
+        TextView setBtn = createFloatingBall("⚙");
         setBtn.setOnClickListener(v -> showSettingsDialog());
-        rootLayout.addView(setBtn, setParams);
+        rootLayout.addView(setBtn);
+        makeDraggable(setBtn);
 
         webView.loadUrl("https://github.com");
         setContentView(rootLayout);
     }
 
-    private Button createFloatingButton(String text) {
-        Button btn = new Button(this);
-        btn.setText(text);
-        btn.setTextColor(Color.WHITE);
-        btn.setTextSize(16);
+    // 半透明悬浮球
+    private TextView createFloatingBall(String text) {
+        TextView tv = new TextView(this);
+        tv.setText(text);
+        tv.setTextColor(Color.WHITE);
+        tv.setTextSize(18);
+        tv.setGravity(Gravity.CENTER);
+        
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.OVAL);
-        shape.setColor(Color.parseColor("#238636"));
-        btn.setBackground(shape);
-        return btn;
+        shape.setColor(Color.parseColor("#88000000")); // 50% 半透明黑
+        tv.setBackground(shape);
+        
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(120, 120);
+        params.gravity = Gravity.TOP | Gravity.START;
+        if (text.equals("译")) {
+            params.setMargins(800, 300, 0, 0); // 初始位置随便放
+        } else {
+            params.setMargins(800, 500, 0, 0);
+        }
+        tv.setLayoutParams(params);
+        return tv;
     }
 
+    // 拖动逻辑
+    private void makeDraggable(final View view) {
+        view.setOnTouchListener(new View.OnTouchListener() {
+            private int initialX;
+            private int initialY;
+            private float initialTouchX;
+            private float initialTouchY;
+            private long lastClickTime = 0;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) v.getLayoutParams();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialX = params.leftMargin;
+                        initialY = params.topMargin;
+                        initialTouchX = event.getRawX();
+                        initialTouchY = event.getRawY();
+                        return false;
+                    case MotionEvent.ACTION_MOVE:
+                        params.leftMargin = initialX + (int) (event.getRawX() - initialTouchX);
+                        params.topMargin = initialY + (int) (event.getRawY() - initialTouchY);
+                        v.setLayoutParams(params);
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    // 原生设置面板
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("设置");
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 20, 50, 20);
 
         CheckBox autoTransCb = new CheckBox(this);
         autoTransCb.setText("自动翻译页面");
@@ -210,18 +248,35 @@ public class MainActivity extends Activity {
             autoTranslate = isChecked;
             prefs.edit().putBoolean("auto_translate", isChecked).apply();
         });
+        layout.addView(autoTransCb);
 
-        builder.setView(autoTransCb);
-        builder.setPositiveButton("确定", null);
+        TextView ipLabel = new TextView(this);
+        ipLabel.setText("自定义 IP:");
+        layout.addView(ipLabel);
+
+        EditText ipInput = new EditText(this);
+        ipInput.setText(currentIp);
+        layout.addView(ipInput);
+
+        builder.setView(layout);
+        builder.setPositiveButton("保存", (dialog, which) -> {
+            String newIp = ipInput.getText().toString().trim();
+            if (!newIp.isEmpty()) {
+                currentIp = newIp;
+                prefs.edit().putString("custom_ip", newIp).apply();
+                webView.reload();
+            }
+        });
+        builder.setNegativeButton("取消", null);
         builder.show();
     }
 
     private void doTranslate() {
         Toast.makeText(this, "正在翻译页面...", Toast.LENGTH_SHORT).show();
         String js = "javascript:(async function() {" +
-                "const els = document.querySelectorAll('p, h1, h2, h3, h4, h5, li, span, a, div');" +
+                "const els = document.querySelectorAll('p, h1, h2, h3, h4, h5, li, span, a');" +
                 "for (let el of els) {" +
-                "  if (el.children.length > 0 || !el.innerText || el.innerText.trim().length < 3) continue;" +
+                "  if (el.children.length > 0 || !el.innerText || el.innerText.trim().length < 2) continue;" +
                 "  let txt = el.innerText.trim();" +
                 "  try {" +
                 "    let res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=' + encodeURIComponent(txt));" +
@@ -236,7 +291,6 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) {
-            webView.stopLoading();
             webView.goBack();
         } else {
             super.onBackPressed();
