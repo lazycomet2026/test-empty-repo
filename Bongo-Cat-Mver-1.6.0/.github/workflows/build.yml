@@ -7,17 +7,23 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
+    - name: Download SFML 2.5.1
+      run: |
+        Invoke-WebRequest -Uri "https://www.sfml-dev.org/files/SFML-2.5.1-windows-vc15-64-bit.zip" -OutFile "sfml.zip"
+        Expand-Archive -Path "sfml.zip" -DestinationPath "C:\"
     - name: Build
       run: |
         $sln = Get-ChildItem -Path . -Filter *.sln -Recurse | Select-Object -First 1
-        msbuild $sln.FullName /p:Configuration=Release /p:Platform=x64
+        msbuild $sln.FullName /p:Configuration=Release /p:Platform=x64 /p:IncludePath="C:\SFML-2.5.1\include;$(IncludePath)" /p:LibraryPath="C:\SFML-2.5.1\lib;$(LibraryPath)"
     - name: Package
       run: |
         mkdir Output
-        Copy-Item -Path "x64\Release\*.exe" -Destination "Output" -Force
-        Copy-Item -Path "img" -Destination "Output" -Recurse -Force
-        Copy-Item -Path "sound" -Destination "Output" -Recurse -Force
-        Copy-Item -Path "*.json" -Destination "Output" -Force
+        $exe = Get-ChildItem -Path . -Filter *.exe -Recurse | Where-Object { $_.DirectoryName -like "*Release*" } | Select-Object -First 1
+        Copy-Item -Path $exe.FullName -Destination "Output" -Force
+        Copy-Item -Path "C:\SFML-2.5.1\bin\*.dll" -Destination "Output" -Force
+        Copy-Item -Path "img" -Destination "Output" -Recurse -Force -ErrorAction SilentlyContinue
+        Copy-Item -Path "sound" -Destination "Output" -Recurse -Force -ErrorAction SilentlyContinue
+        Copy-Item -Path "*.json" -Destination "Output" -Force -ErrorAction SilentlyContinue
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
