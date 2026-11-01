@@ -47,7 +47,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     //初始化json、读取数据
     while (!data::init());
 
-    //【修改点1】：强制固定窗口为极小尺寸（无视配置文件），彻底解决太大和裁切问题
+    //【修改点1】：强制固定窗口为极小尺寸，彻底解决太大和裁切问题
     WIDTH = 350; 
     HEIGHT = 200;
     window.create(sf::VideoMode(WIDTH, HEIGHT), VERSION, sf::Style::Resize | sf::Style::Close); 
@@ -71,6 +71,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     //用线程加载各类文件,并获取线程句柄
     HANDLE handle_loadfile_thread = thread_loadfile(data::cfg["mode"].asInt());
 
+    //【修改点2】：强制开启桌宠透明模式和窗口置顶，无视配置文件里的乱码
+    data::cfg["decoration"]["desktop_pet"] = true;
+    data::cfg["decoration"]["topWindow"] = true;
+    
     //由config设置窗口样式。
     setWindow();
 
@@ -86,15 +90,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     while (window.isOpen())
     {
 #ifdef MYDEBUG
-        static sf::Clock FPStimeer;//启动帧率计时器
-        FPStimeer.restart();//重置时钟
-        static double fps[5] = { 0 };//5帧里取平均值
-        static int i = 0;//帧计数器
+        static sf::Clock FPStimeer;
+        FPStimeer.restart();
+        static double fps[5] = { 0 };
+        static int i = 0;
 #endif // MYDEBUG
 
         //接受窗口消息
         MSG msg;
-
         if(PeekMessage(&msg, catHwnd, 0x0400 + 2, 0x0400 + 4, PM_REMOVE))
             switch (msg.message)
             {
@@ -102,31 +105,28 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                 //释放内存
                 clearmemory();
                 while (!data::init());
+                //重新加载时，再次强行覆盖为小窗口透明
+                data::cfg["decoration"]["desktop_pet"] = true;
+                data::cfg["decoration"]["topWindow"] = true;
                 setWindow();
+                WIDTH = 350; HEIGHT = 200;
+                window.setSize(sf::Vector2u(WIDTH, HEIGHT));
                 switch (data::cfg["mode"].asInt())
                 {
-                case 1:
-                    standard::init();
-                    break;
-                case 2:
-                    keyboard::init();
-                    break;
-                case 98:
-                    live2d_98::init();
-                    break;
-                default:
-                    break;
+                case 1: standard::init(); break;
+                case 2: keyboard::init(); break;
+                case 98: live2d_98::init(); break;
+                default: break;
                 }
                 is_reload_for_wmmsg = true;
                 break;
             case UIWM_WRITECONFIG_AND_RELOAD_FILE:
-
                 break;
-            
             default:
                 is_reload_for_wmmsg = false;
                 break;
             }
+
         if (msgtimer.getElapsedTime() > sf::seconds(2))
         {
             msgtimer.restart();
@@ -143,46 +143,55 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
                 window.close();
                 break;
             case sf::Event::KeyPressed:
-                //如果按下ctrl+r，则重新加载config并重新设置窗口
+                // 保留 Ctrl+R 重新加载
                 if (event.key.code == sf::Keyboard::R && event.key.control)
                 {
                     if (!is_reload) {
                         clearmemory();
                         while (!data::init());
+                        data::cfg["decoration"]["desktop_pet"] = true;
+                        data::cfg["decoration"]["topWindow"] = true;
                         setWindow();
+                        WIDTH = 350; HEIGHT = 200;
+                        window.setSize(sf::Vector2u(WIDTH, HEIGHT));
                         switch (data::cfg["mode"].asInt())
                         {
-                        case 1:
-                            standard::init();
-                            break;
-                        case 2:
-                            keyboard::init();
-                            break;
-                        case 98:
-                            live2d_98::init();
-                            break;
-                        default:
-                            break;
+                        case 1: standard::init(); break;
+                        case 2: keyboard::init(); break;
+                        case 98: live2d_98::init(); break;
+                        default: break;
                         }
                     }
                     is_reload = true;
                 }
-                //如果按下ctrl+shift+S，则打开UI页面
-                else if (event.key.code == sf::Keyboard::S && event.key.control && event.key.shift && is_UIThread_on == false && is_reload == false)
+                //【修改点3】：彻底禁用崩溃的 Ctrl+Shift+S UI，防止程序闪现闪退
+                else if (event.key.code == sf::Keyboard::S && event.key.control && event.key.shift)
                 {
-                    On_Start_UI();
+                    // 直接拦截，不再调用 On_Start_UI()，防止 Win7 崩溃
                     is_reload = true;
+                }
+                //【修改点4】：自制快捷键，按住 Ctrl + 上/下 箭头 来实时调整猫咪大小
+                else if (event.key.code == sf::Keyboard::Up && event.key.control)
+                {
+                    WIDTH += 20; HEIGHT += 20;
+                    window.setSize(sf::Vector2u(WIDTH, HEIGHT));
+                }
+                else if (event.key.code == sf::Keyboard::Down && event.key.control)
+                {
+                    if (WIDTH > 150) {
+                        WIDTH -= 20; HEIGHT -= 20;
+                        window.setSize(sf::Vector2u(WIDTH, HEIGHT));
+                    }
                 }
                 break;
             case sf::Event::Resized:
-                //【修改点2】：非桌宠模式下强制保持350:200比例，防止被拉扁
+                // 强制保持比例，防止被拉扁
                 if (!data::cfg["decoration"]["desktop_pet"].asBool()) 
                 {
                     if (event.size.width != WIDTH)
                         window.setSize(sf::Vector2u(event.size.width, event.size.width * 200 / 350));
                     else if (event.size.height != HEIGHT)
                         window.setSize(sf::Vector2u(event.size.height * 350 / 200, event.size.height));
-                    //存储新的宽高值
                     WIDTH = window.getSize().x;
                     HEIGHT = window.getSize().y;
                 }
@@ -193,36 +202,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 
         //图形绘制
-
-        //清除窗口内图像
         clearCatWindow();
-
-        //绘制猫咪
         drawCat(data::cfg["mode"].asInt());
 
-        //MYDEBUG下的帧率绘制
 #ifdef MYDEBUG
-        //写入计算队列
         fps[i] = sf::seconds(1) / FPStimeer.getElapsedTime();
         i++;
         if (i > 4)i = 0;
-
-        //绘制帧率
         window.draw(sf::Text("FPS:"+ std::to_string(
-        
-            min(min(min(
-                min(fps[0], fps[1]),
-                min(fps[1], fps[2]),
-                ), fps[3]), fps[4])
-        
+            min(min(min(min(fps[0], fps[1]), min(fps[1], fps[2])), fps[3]), fps[4])
         ), catfont));
 #endif // MYDEBUG 
 
-        //显示绘制内容
         window.display();
 
         //循环置顶
-        if (data::cfg["decoration"]["topWindow"].asBool()) SetWindowPos(catHwnd, HWND_TOP, 1, 1, 1, 1, SWP_NOMOVE | SWP_NOSIZE | SWP_NOCOPYBITS| SWP_SHOWWINDOW);
+        if (data::cfg["decoration"]["topWindow"].asBool()) 
+            SetWindowPos(catHwnd, HWND_TOP, 1, 1, 1, 1, SWP_NOMOVE | SWP_NOSIZE | SWP_NOCOPYBITS| SWP_SHOWWINDOW);
     }
 
     return 0;
