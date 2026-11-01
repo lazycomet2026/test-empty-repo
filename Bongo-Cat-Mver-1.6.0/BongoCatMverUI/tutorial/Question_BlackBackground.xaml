@@ -1,0 +1,44 @@
+﻿<Page x:Class="MyWpfApp.tutorial.Question_BlackBackground"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyWpfApp.tutorial"
+      mc:Ignorable="d" 
+      d:DesignWidth="800"
+      Title="Question_BlackBackground">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Bongocat_BtnStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+
+    <Grid>
+        <StackPanel Margin="80,0,0,0">
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="常见问题：黑色背景/窗口无内容" FontSize="30" VerticalAlignment="Top" Height="38"/>
+            <ScrollViewer Margin="0,10,0,0" Focusable="False" 
+                        CanContentScroll="False" 
+                        Style="{StaticResource CatScrollViewer}">
+
+                <StackPanel>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        直播软件中捕获到的猫咪有黑色背景请参考"/>
+                        <Hyperlink><Run Text="关于直播/录屏的提示"/></Hyperlink>
+                        <Run Text="。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能原因是Aero没有设置正确。请自行百度Aero设置方法。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能原因是显卡兼容性有问题，请尝试更新显卡驱动。"/>
+                    </TextBlock>
+                </StackPanel>
+
+            </ScrollViewer>
+        </StackPanel>
+    </Grid>
+</Page>

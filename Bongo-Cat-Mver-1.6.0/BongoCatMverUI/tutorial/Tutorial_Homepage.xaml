@@ -1,0 +1,37 @@
+﻿<Page x:Class="MyWpfApp.tutorial.Tutorial_Homepage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyWpfApp.tutorial"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Tutorial_Homepage">
+
+    <Grid>
+        <StackPanel Margin="80,0,0,0">
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="欢迎使用Bongo Cat Mver！" FontSize="30" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Left" Margin="10,20,0,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" Width="450">
+                <Run Text="        这里是教程首页，用于帮您导航到您需要的教程页面。&#xA;"/>
+                <Run Text="       如果您是第一次使用此版本的Bongo Cat Mver(以下简称'猫咪')，务必优先阅读"/><Run Text=" "/>
+                <Hyperlink Click="Click_HowToUseThisUI"><Run Text="使用此UI的正确姿势"/></Hyperlink><Run Text=" "/>
+                <Run Text="和"/><Run Text=" "/>
+                <Hyperlink Click="Click_WhatYouMustKnow"><Run Text="关于猫咪你所必须要知道的事"/></Hyperlink><Run Text="。"/>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" Width="440">
+                <Run Text="        如果您是主播或者UP主，希望能在视频或者直播中使用猫咪的话建议阅读 "/>
+                <Hyperlink Click="Click_AboutBroadcast"><Run Text="关于直播/录屏的提示"/></Hyperlink><Run Text=" 。"/>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" Width="440">
+                <Run Text="        以下列出其他常用的教程链接：&#xA;"/>
+                <Run Text="       "/><Hyperlink Click="Click_DIYCat"><Run Text="修改猫咪形象"/></Hyperlink><Run Text=" ；&#xA;"/>
+                <Run Text="       "/><Hyperlink Click="Click_Keymap"><Run Text="修改键位映射"/></Hyperlink><Run Text=" ；&#xA;"/>
+                <Run Text="       "/><Hyperlink Click="Click_CatFreeze"><Run Text="解决猫咪不动的问题"/></Hyperlink><Run Text=" 。"/>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" Width="440">
+                <Run Text="        您也可以点击通过左上角的 "/><Hyperlink Click="Click_Manu"><Run Text="目录"/></Hyperlink><Run Text=" 按钮来查看所有的教程和一些常见问题的解决方案。&#xA;"/>
+                <Run Text="       如果您有阅读教程后仍未解决的问题，或者有教程中未提及的问题，欢迎点击左侧反馈交流按钮进群反馈问题。&#xA;"/>
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</Page>

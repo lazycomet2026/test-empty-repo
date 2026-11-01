@@ -1,0 +1,237 @@
+﻿<Page x:Class="MyWpfApp.setting_cat"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:input="clr-namespace:System.Windows.Input;assembly=PresentationCore"
+      xmlns:local="clr-namespace:MyWpfApp"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="setting_cat">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+
+                <ResourceDictionary Source="Bongocat_BtnStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Page.Triggers>
+
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded" SourceName="line">
+            <BeginStoryboard >
+                <Storyboard>
+                    <DoubleAnimation
+                        Duration="0:0:0.5"
+                        Storyboard.TargetName="line"
+                        Storyboard.TargetProperty="X1"
+                        From="400" To="10"  />
+                    <DoubleAnimation
+                        Duration="0:0:0.5"
+                        Storyboard.TargetName="line"
+                        Storyboard.TargetProperty="X2"
+                        From="400" To="790"  />
+                    <DoubleAnimation
+                        Duration="0:0:0.5"
+                        Storyboard.TargetName="line"
+                        Storyboard.TargetProperty="Opacity"
+                        From="0.5" To="1"  />
+                    <DoubleAnimation
+                        Duration="0:0:0.5"
+                        Storyboard.TargetName="line"
+                        Storyboard.TargetProperty="StrokeThickness"
+                        From="0" To="2"  />
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+
+    </Page.Triggers>
+
+
+
+    <Grid Width="800" Height="600" Background="White" MouseDown="movefocus2visual">
+
+        <Grid.Resources>
+            <local:rgb2SolidColorBrushConver x:Key="rgb2SolidColorBrush"/>
+            <local:rgb2colorConver x:Key="rgb2color"/>
+            <local:rgb2rConver x:Key="rgb2r"/>
+            <local:rgb2gConver x:Key="rgb2g"/>
+            <local:rgb2bConver x:Key="rgb2b"/>
+            <local:rgb2SolidColorBrushConver2 x:Key="rgb2SolidColorBrush2"/>
+            <local:bool_swap x:Key="boolswap"/>
+        </Grid.Resources>
+        <TextBlock TextWrapping="Wrap" Text="嗨呀妮妮真棒" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27" HorizontalAlignment="Center"  />
+        <Button HorizontalAlignment="Left" Height="110" Margin="25,20,0,0" VerticalAlignment="Top" Width="217" Style="{StaticResource BongoCat_CatModeButton}" Click="Button_standard_mode_Click">
+            <Button.Content>
+                <StackPanel Width="180">
+                    <TextBlock TextWrapping="Wrap" Text="标准模式" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="24" Height="27" Margin="0,5,0,10"/>
+                    <Grid Height="49.427" Margin="17.126,0">
+                        <materialDesign:PackIcon Kind="Mouse"  Height="39.427"  Width="46.025" VerticalAlignment="Center" Margin="10,5,0,5"/>
+                        <materialDesign:PackIcon Kind="Add" Height="39.427" Width="46.025" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="43.775,5,55.948,5"/>
+                        <materialDesign:PackIcon Kind="KeyboardVariant" Height="49.427" Width="49.698"  VerticalAlignment="Center"  Margin="82.55,0,0,0"/>
+                    </Grid>
+                </StackPanel>
+            </Button.Content>
+        </Button>
+
+
+
+
+
+        <Button  HorizontalAlignment="Left" Height="110" Margin="292,20,0,0"  VerticalAlignment="Top" Width="217" Style="{StaticResource BongoCat_CatModeButton}" Click="Button_keyboard_mode_Click">
+            <Button.Content>
+                <StackPanel Width="180">
+                    <TextBlock TextWrapping="Wrap" Text="键盘模式" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="24" Height="27" Margin="0,5,0,10"/>
+
+                    <materialDesign:PackIcon Kind="KeyboardVariant" Height="49.427" Width="49.698" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button.Content>
+        </Button>
+
+
+
+        <Button HorizontalAlignment="Left" Height="110" Margin="559,20,0,0"  VerticalAlignment="Top" Width="217" Style="{StaticResource BongoCat_CatModeButton}" IsEnabled="False">
+            <Button.Content>
+                <StackPanel Width="180">
+                    <TextBlock TextWrapping="Wrap" Text="手柄模式" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="24" Height="27" Margin="0,5,0,10"/>
+
+                    <materialDesign:PackIcon Kind="GamepadVariant" Height="49.427" Width="49.698" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button.Content>
+
+
+
+        </Button>
+
+
+
+
+
+
+
+
+        <Frame x:Name="Setting_Cat_Frame" Content="Frame" HorizontalAlignment="Left" Height="450" Margin="0,150,0,0" VerticalAlignment="Top" Width="540" Background="White"  Source="setting_cat_standard_mode.xaml" NavigationUIVisibility="Hidden"/>
+
+
+
+
+
+        <Line x:Name="line" X1="10" Y1="149" X2="790" Y2="149" Stroke="#FFCBCBCB" StrokeThickness="2" >
+
+
+
+
+        </Line>
+        <Grid HorizontalAlignment="Left" Height="450" Margin="540,150,0,0" VerticalAlignment="Top" Width="260"  >
+            <Rectangle HorizontalAlignment="Left" Height="80" Margin="155,25,0,0" Stroke="#FFD8D8D8" VerticalAlignment="Top" Width="80" RadiusY="40" RadiusX="40"/>
+            <Rectangle HorizontalAlignment="Left" Height="80" Margin="155,155,0,0" Stroke="#FFD8D8D8" VerticalAlignment="Top" Width="80" RadiusY="40" RadiusX="40"/>
+            <Rectangle HorizontalAlignment="Left" Height="80" Margin="25,25,0,0" Stroke="#FFD8D8D8" VerticalAlignment="Top" Width="80" RadiusY="40" RadiusX="40"/>
+            <Rectangle HorizontalAlignment="Left" Height="80" Margin="25,155,0,0" Stroke="#FFD8D8D8" VerticalAlignment="Top" Width="80" RadiusY="40" RadiusX="40"/>
+            <Rectangle HorizontalAlignment="Left" Height="80" Margin="25,285,0,0" Stroke="#FFD8D8D8" VerticalAlignment="Top" Width="80" RadiusY="40" RadiusX="40" />
+            <Rectangle HorizontalAlignment="Left" Height="80" Margin="155,285,0,0" Stroke="#FFD8D8D8" VerticalAlignment="Top" Width="80" RadiusY="40" RadiusX="40"/>
+
+
+
+            <StackPanel Height="110"  Width="80" Margin="25,25,155,315">
+                <ToggleButton
+                Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                ToolTip="将猫咪窗口设置为透明无边框的样式"  IsChecked="{Binding decoration_desktopPet, Mode=TwoWay}" Height="80" Width="80" Cursor="Hand" Click="send_change_message" ClickMode="Press">
+                    <TextBlock Text="B"  FontSize="30"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="./Resources/#caticon" />
+                </ToggleButton>
+                <TextBlock Text="桌宠模式" Height="30" FontSize="16" Margin="0,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Height="110"  Width="80" Margin="155,25,25,315" >
+                <ToggleButton
+                Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"  IsChecked="{Binding decoration_topWindow, Mode=TwoWay}" Click="send_change_message" ClickMode="Press"
+                ToolTip="将猫咪窗口显示在其他窗口的上方"  Height="80" Width="80" Cursor="Hand" >
+                    <materialDesign:PackIcon Kind="ArrowUpBoldBoxOutline" Height="40" Width="40" />
+                </ToggleButton>
+                <TextBlock Text="窗口置顶" Height="30" FontSize="16" Margin="0,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Height="110"  Width="80" Margin="25,155,155,185" >
+                <Button
+                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" materialDesign:ShadowAssist.ShadowDepth="Depth0"  
+                ToolTip="限制每秒帧数可以节省性能"  Height="80" Width="80" Cursor="Hand" >
+                    <Button.Foreground>
+                        <SolidColorBrush Color="{StaticResource Primary700}">
+                        </SolidColorBrush>
+                    </Button.Foreground>
+                    <TextBox x:Name="textbox_fps" LostFocus="fps_null2zero" Text="{Binding  decoration_framerateLimit, Mode=TwoWay}" PreviewTextInput="tb_PreviewTextInput" input:InputMethod.IsInputMethodEnabled="False" TextChanged="TextBox_fps_Num_limite" PreviewKeyDown="fps_return" FontSize="40"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="./Resources/#caticon" BorderBrush="Transparent" MaxLength="3"/>
+                </Button>
+                <TextBlock Text="帧率限制" Height="30" FontSize="16" Margin="0,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+
+
+            <StackPanel Height="110"  Width="80" Margin="155,155,25,185" IsEnabled="{Binding decoration_desktopPet, Mode=OneWay,Converter={StaticResource boolswap}}">
+                <Button Click="Button_Click_background_color" 
+                        
+                 Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                ToolTip="改变背景颜色"  Height="80" Width="80" Cursor="Hand" Background="{Binding decoration_rgb,Mode=OneWay,Converter={StaticResource rgb2SolidColorBrush}}" Foreground="{Binding decoration_rgb,Converter={StaticResource rgb2SolidColorBrush2}}" >
+                    <TextBlock Text="C"  FontSize="40"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="./Resources/#caticon" />
+                </Button>
+                <TextBlock Text="背景色" Height="30" FontSize="16" Margin="0,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            
+            
+            
+            
+            
+            <StackPanel   Width="120" Margin="5,285,135,55" >
+                <Button
+                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" materialDesign:ShadowAssist.ShadowDepth="Depth0"  
+                ToolTip="打开存放当前模式所用素材的文件夹"  Height="80" Width="80" Cursor="Hand" Click="open_resources_files" ClickMode="Press" >
+                    <Button.Foreground>
+                        <SolidColorBrush Color="{StaticResource Primary700}">
+                        </SolidColorBrush>
+                    </Button.Foreground>
+                    <materialDesign:PackIcon Kind="FolderOpenOutline" Height="40" Width="40" />
+                </Button>
+                <TextBlock Text="打开素材文件夹" Height="30" FontSize="16" Margin="0,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel  Width="120" Margin="135,285,5,55" >
+                <Button
+                Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}" materialDesign:ShadowAssist.ShadowDepth="Depth0" 
+                ToolTip="打开config文件以进行更详细的设置"  Height="80" Width="80" Cursor="Hand" Click="open_config_json" ClickMode="Press">
+                    <Button.Foreground>
+                        <SolidColorBrush Color="{StaticResource Primary700}">
+                        </SolidColorBrush>
+                    </Button.Foreground>
+                    <materialDesign:PackIcon Kind="FileSettingsVariantOutline" Height="40" Width="40" />
+                </Button>
+                <TextBlock Text="打开config文件" Height="30" FontSize="16" Margin="0,3,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+
+        <Popup x:Name="pop_colorpicker" AllowsTransparency="True" PopupAnimation="Scroll" StaysOpen="False" Placement="MousePoint" Closed="popyoclose" Opened="popupopen">
+            <Grid Height="400" Width="250">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="103*"/>
+                    <RowDefinition Height="97*"/>
+                </Grid.RowDefinitions>
+                <Rectangle RadiusY="12" RadiusX="12" Fill="#99655878" Grid.RowSpan="2" Margin="0,0,0,76" />
+                <materialDesign:ColorPicker  Name="colorPicker" Margin="30,25,30,0" Height="171" VerticalAlignment="Top" Color="{Binding decoration_rgb,Mode=TwoWay,Converter={StaticResource rgb2color}}"/>
+                <Slider Name="sliderR" HorizontalAlignment="Left" Margin="10,0,0,147" VerticalAlignment="Bottom" Width="147" Grid.Row="1" Foreground="#CCFF5151" Minimum="0" Maximum="255" Value="{Binding decoration_rgb,Mode=TwoWay,Converter={StaticResource rgb2r}}" />
+                <Slider Name="sliderG" HorizontalAlignment="Left" Margin="10,0,0,124" VerticalAlignment="Bottom" Width="147" Grid.Row="1" Foreground="#CC43FF43" Minimum="0" Maximum="255" Value="{Binding decoration_rgb,Mode=TwoWay,Converter={StaticResource rgb2g}}"/>
+                <Slider Name="sliderB" HorizontalAlignment="Left" Margin="10,0,0,101" VerticalAlignment="Bottom" Width="147" Grid.Row="1" Foreground="#CC1268FF"  Minimum="0" Maximum="255" Value="{Binding decoration_rgb,Mode=TwoWay,Converter={StaticResource rgb2b}}"/>
+                <TextBox HorizontalAlignment="Left"  Margin="187,26,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderR, Path=Value, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="53" Grid.Row="1" TextAlignment="Center" Height="21" MaxLength="3" Foreground="White" materialDesign:TextFieldAssist.UnderlineBrush="#B2FFFFFF"/>
+                <TextBox HorizontalAlignment="Left"  Margin="187,49,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderG, Path=Value, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="53" Grid.Row="1" TextAlignment="Center" Height="21" MaxLength="3" Foreground="White" materialDesign:TextFieldAssist.UnderlineBrush="#B2FFFFFF"/>
+                <TextBox HorizontalAlignment="Left"  Margin="187,72,0,0" TextWrapping="Wrap" Text="{Binding ElementName=sliderB, Path=Value, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="53" Grid.Row="1" Height="21" TextAlignment="Center" MaxLength="3" Foreground="White" materialDesign:TextFieldAssist.UnderlineBrush="#B2FFFFFF"/>
+                <Button Height="18" Margin="10,196,215,186"  Width="25" Grid.RowSpan="2" Background="White" BorderBrush="{x:Null}" Click="button_bgcolor_white" ClickMode="Press"/>
+                <Button Height="18" Margin="40,196,185,186"  Width="25" Grid.RowSpan="2" Background="Blue" BorderBrush="{x:Null}" Click="button_bgcolor_blue" ClickMode="Press"/>
+                <Button Height="18" Margin="70,196,155,186"  Width="25" Grid.RowSpan="2" Background="Lime" BorderBrush="{x:Null}" Click="button_bgcolor_green" ClickMode="Press"/>
+                <Button Height="18" Margin="100,196,125,186"  Width="25" Grid.RowSpan="2" Background="Red" BorderBrush="{x:Null}" Click="button_bgcolor_red" ClickMode="Press"/>
+                <Button Height="18" Margin="130,196,95,186"  Width="25" Grid.RowSpan="2" Background="Magenta" BorderBrush="{x:Null}" Click="button_bgcolor_magenta" ClickMode="Press"/>
+                <Button Height="Auto" Margin="160,189,7,177" Grid.RowSpan="2" Background="{Binding decoration_rgb,Mode=TwoWay,Converter={StaticResource rgb2SolidColorBrush}}" Click="button_saveBgColor" ClickMode="Press">
+                    <TextBlock Text="应 用" Foreground="{Binding decoration_rgb,Converter={StaticResource rgb2SolidColorBrush2},Mode=OneWay}"/>
+                </Button>
+                <TextBlock HorizontalAlignment="Left" Margin="170,31,0,0" Grid.Row="1" TextWrapping="Wrap" Text="R" VerticalAlignment="Top" Width="12" Foreground="White"/>
+                <TextBlock HorizontalAlignment="Left" Margin="170,54,0,0" Grid.Row="1" TextWrapping="Wrap" Text="G" VerticalAlignment="Top" Width="12" Foreground="White"/>
+                <TextBlock HorizontalAlignment="Left" Margin="170,77,0,0" Grid.Row="1" TextWrapping="Wrap" Text="B" VerticalAlignment="Top" Width="12" Foreground="White"/>
+            </Grid>
+        </Popup>
+
+        <Button x:Name="movefocus" Height="0" Width="0" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+    </Grid>
+</Page>

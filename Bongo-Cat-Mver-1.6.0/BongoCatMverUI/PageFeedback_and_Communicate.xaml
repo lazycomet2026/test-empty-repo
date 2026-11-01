@@ -1,0 +1,163 @@
+﻿<Page x:Class="MyWpfApp.PageFeedback_and_Communicate"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyWpfApp"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Feedback and Communicate">
+
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Bongocat_BtnStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+
+
+    <Grid Width="800" Height="600" Background="White">
+        <materialDesign:Card
+  Width="200" Margin="22,10,578,310">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+        Height="140" />
+                    <RowDefinition
+        Height="*" />
+                    <RowDefinition
+        Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image
+      Source="Resources/BongoCatMverQQ.png"
+      Height="140"
+      Width="196"
+      Stretch="UniformToFill" />
+                <Button
+      Grid.Row="0"
+      Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+      HorizontalAlignment="Right"
+      VerticalAlignment="Bottom"
+      Margin="0 0 16 -20" Click="Add_QQ_1" ClickMode="Press">
+                    <materialDesign:PackIcon
+        Kind="ExitToApp" Foreground="#DDFFFFFF" Height="24" Width="25" />
+                </Button>
+                <StackPanel
+      Grid.Row="1"
+      Margin="8 24 8 0">
+                    <TextBlock
+        FontWeight="Bold">
+      反群&amp;交流一群
+                    </TextBlock>
+                    <TextBlock
+        TextWrapping="Wrap"
+        VerticalAlignment="Center" Text="职能:&#x000A;反馈/交流/下载/素材/接稿/约稿&#x000A;&#x000A;建群较早，已经关闭入口，作为猫咪第一批使用者的福利群。"/>
+                </StackPanel>
+
+
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card
+            Width="200" Margin="300,10,300,310">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="140" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image
+                    Source="Resources/BongoCatMverQQ2.png"
+                    Height="140"
+                    Width="196"
+                    Stretch="UniformToFill" />
+                <Button
+                    Grid.Row="0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0 0 16 -20" Click="Add_QQ_2" ClickMode="Press">
+                    <materialDesign:PackIcon
+                        Kind="ExitToApp" Foreground="#DDFFFFFF" Height="24" Width="25" />
+                </Button>
+                <StackPanel
+                    Grid.Row="1"
+                    Margin="8 24 8 0">
+                    <TextBlock
+                        FontWeight="Bold"><Run Text="反群&amp;交流二群"/></TextBlock>
+                    <TextBlock
+                        TextWrapping="Wrap"
+                        VerticalAlignment="Center" Text="职能:&#x000A;反馈/交流/下载/素材/接稿/约稿&#x000A;&#x000A;人数较多，是当前主要活跃的群。入群答案不是“BONGO”不要再乱猜了…"/>
+                </StackPanel>
+
+
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card
+            Width="200" Margin="22,310,578,10">
+            <Grid Margin="0,-6,0,6">
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="140" />
+                    <RowDefinition
+                        Height="*" />
+                    <RowDefinition
+                        Height="Auto" />
+                </Grid.RowDefinitions>
+                <Image
+                    Source="Resources/shigongzhong.png"
+                    Height="140"
+                    Width="196"
+                    Stretch="UniformToFill" />
+                <Button
+                    Grid.Row="0"
+                    Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0 0 16 -20" Click="Add_QQ_1" ClickMode="Press" IsEnabled="False">
+                    <materialDesign:PackIcon
+                        Kind="ExitToApp" Foreground="#DDFFFFFF" Height="24" Width="25" />
+                </Button>
+                <StackPanel
+                    Grid.Row="1"
+                    Margin="8 24 8 0">
+                    <TextBlock
+                        FontWeight="Bold" Foreground="#33000000"><Run Text="猫 舍"/><Run Text="(筹建中)"/></TextBlock>
+
+                    <TextBlock
+                        TextWrapping="Wrap"
+                        VerticalAlignment="Center" Text="职能:&#xA;设计、制图、L2d交流/接稿/约稿&#xA;&#xA;大概是个给画师、模型师交流的平台。一般的客户可进群寻找、联系合适的画师。当然也可能建不起来" Foreground="#33000000"/>
+                </StackPanel>
+
+
+            </Grid>
+        </materialDesign:Card>
+        <WebBrowser Name="qqweb" Visibility="Hidden"/>
+        <Grid  Height="280" Width="200" Margin="300,310,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Rectangle  Height="280"  Stroke="#FFB4B4B4"  Width="200" RadiusY="3" RadiusX="3" StrokeDashArray="5 8" />
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="总有一天会有群的" VerticalAlignment="Center" Foreground="#FFB4B4B4"/>
+
+        </Grid>
+
+        <Grid  Height="280" Width="200" Margin="578,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Rectangle  Height="280"  Stroke="#FFB4B4B4"  Width="200" RadiusY="3" RadiusX="3" StrokeDashArray="5 8" />
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="总有一天会有群的" VerticalAlignment="Center" Foreground="#FFB4B4B4"/>
+
+        </Grid>
+        <Grid  Height="280" Width="200"  Margin="578,310,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Rectangle  Height="280"  Stroke="#FFB4B4B4"  Width="200" RadiusY="3" RadiusX="3" StrokeDashArray="5 8" />
+            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="总有一天会有群的" VerticalAlignment="Center" Foreground="#FFB4B4B4"/>
+
+        </Grid>
+    </Grid>
+</Page>

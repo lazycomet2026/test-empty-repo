@@ -1,0 +1,74 @@
+﻿<Page x:Class="MyWpfApp.tutorial.Question_CatFreeze"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyWpfApp.tutorial"
+      mc:Ignorable="d" 
+       d:DesignWidth="800"
+      Title="Question_CatFreeze">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Bongocat_BtnStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+
+
+    <Grid>
+        <StackPanel Margin="80,0,0,0">
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="常见问题：猫咪的一部分或整体不动了" FontSize="30" VerticalAlignment="Top" Height="38"/>
+            <ScrollViewer Margin="0,10,0,0" Focusable="False" 
+                        CanContentScroll="False" Height="542"
+                        Style="{StaticResource CatScrollViewer}">
+
+                <StackPanel>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="只有猫咪的鼠标不动" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能原因是游玩会锁定鼠标的游戏时没有开启“强制鼠标移动”。在“猫咪设置”将其打开即可。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        在窗口捕获猫咪的情况下，猫咪被藏进屏幕边缘外的地方可能在直播软件中不会动，请将猫咪完整置于屏幕范围内。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="猫咪不进行拍键盘的动作/不执行表情/不执行音频/不显示按键特效" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能是错误设置了config.json，请自行检查是否有把键码写进另一个模式的错误，请自行检查相关键码是否还存在（群里有部分群友分享的素材包删除了某些键码）。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能是文件缺失或替换了错误格式的文件或对文件进行了错误的命名。请检查自己文件的命名，请确保图片文件都是png格式、音频文件都是wav、flac、ogg格式。请确保没有将文件替换到错误的模式里（群里把standard模式素材替换进keyboard模式里去的不止一两个人）。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能是由于内存、硬盘等各种玄学原因导致读取文件失败，请尝试重启猫咪和重启电脑。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        在窗口捕获猫咪的情况下，猫咪被藏进屏幕边缘外的地方可能在直播软件中不会动，请将猫咪完整置于屏幕范围内。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="猫咪整体都不动了" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能是上述两种情况的混合，请先排除上述问题。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        可能猫咪窗口因为某些原因被最小化了，任何被最小化的窗口在直播软件中都是不会动的。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        在窗口捕获猫咪的情况下，猫咪被藏进屏幕边缘外的地方可能在直播软件中不会动，请将猫咪完整置于屏幕范围内。"/>
+                    </TextBlock>
+
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        如果你直播或录屏的是全屏的osu!或全屏的Minecraft或其他导致猫咪不动的游戏。你需要在直播软件中以“游戏捕获”捕获猫咪，并为猫咪勾选“反作弊兼容”。"/>
+                    </TextBlock>
+                </StackPanel>
+
+            </ScrollViewer>
+        </StackPanel>
+    </Grid>
+</Page>

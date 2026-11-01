@@ -1,0 +1,66 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\bongocat\\bongocat-osu-master\\BongoCatMverUI\\BongoCatMverUI\\BongoCatMverUI.csproj": {}
+  },
+  "projects": {
+    "D:\\bongocat\\bongocat-osu-master\\BongoCatMverUI\\BongoCatMverUI\\BongoCatMverUI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\bongocat\\bongocat-osu-master\\BongoCatMverUI\\BongoCatMverUI\\BongoCatMverUI.csproj",
+        "projectName": "BongoCatMverUI",
+        "projectPath": "D:\\bongocat\\bongocat-osu-master\\BongoCatMverUI\\BongoCatMverUI\\BongoCatMverUI.csproj",
+        "packagesPath": "C:\\Users\\10737\\.nuget\\packages\\",
+        "outputPath": "D:\\bongocat\\bongocat-osu-master\\BongoCatMverUI\\BongoCatMverUI\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "C:\\Users\\10737\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "MaterialDesignThemes": {
+              "target": "Package",
+              "version": "[3.0.1, )"
+            },
+            "Microsoft.Toolkit.Wpf.UI.Controls.WebView": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "uap10.0.18362"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2 @@
+D:\bongocat\bongocat-osu-master\CatUILauncher\Debug\CatUILauncher.vcxprojAssemblyReference.cache
+D:\bongocat\bongocat-osu-master\CatUILauncher\Debug\CatUILauncher.vcxproj.CopyComplete

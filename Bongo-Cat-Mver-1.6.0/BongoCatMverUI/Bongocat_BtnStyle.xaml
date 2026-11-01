@@ -1,0 +1,382 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MyWpfApp"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+                    
+
+
+
+
+
+
+        <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+
+        <!-- throw in some extra colour for our floating action button -->
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+
+
+
+
+
+
+
+
+
+    <Style BasedOn="{StaticResource {x:Type Button}}"
+           TargetType="Button"
+           x:Key="BongoCat_ManuButton">
+        
+        <Setter Property="ClickMode" Value="Press"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="RenderTransform" >
+            <Setter.Value>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+
+            <EventTrigger RoutedEvent="UIElement.MouseEnter">
+
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
+                        To="1.2"  />
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
+                        To="1.2"  />
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)"
+                        To="15"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"
+                        To="1"  />
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"
+                        To="1"  />
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)"
+                        To="0"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </Style.Triggers>
+
+    </Style>
+
+
+
+
+    <Style BasedOn="{StaticResource {x:Type Button}}"
+           TargetType="Button"
+           x:Key="BongoCat_CatModeButton">
+
+        <Setter Property="ClickMode" Value="Press"/>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        <Setter Property="Opacity" Value="0.5"/>
+        <Setter Property="RenderTransform" >
+            <Setter.Value>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+
+            <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0.75"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.08"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0.5"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+
+        </Style.Triggers>
+
+    </Style>
+
+
+    <Style BasedOn="{StaticResource {x:Type Button}}"
+            TargetType="Button"
+           x:Key="BongoCat_CatCheckButton">
+        <Setter Property="Opacity" Value="0"/>
+        <Setter Property="Height" Value="50"/>
+        <Setter Property="Margin" Value="-25,-1,-40,0"/>
+        <Setter Property="Width" Value="493"/>
+        <Setter Property="ClickMode" Value="Press"/>
+
+
+        <Style.Triggers>
+
+
+            <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.1"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0.2"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.1"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.Click">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                        Duration="0:0:0.05"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0.4"  />
+                            <DoubleAnimation
+                        Duration="0:0:0.3"
+                        Storyboard.TargetProperty="Opacity"
+                        To="0.21"  />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+
+        </Style.Triggers>
+
+    </Style>
+
+
+
+    <Storyboard x:Key="is_Using_live2d_on_animation">
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="gird_l2d_horizontal_flip"
+                        Storyboard.TargetProperty="Height"
+                        To="50"  />
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="gird_l2d_correct"
+                        Storyboard.TargetProperty="Height"
+                        To="50"  />
+    </Storyboard>
+    <Storyboard x:Key="is_Using_live2d_off_animation">
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="gird_l2d_horizontal_flip"
+                        Storyboard.TargetProperty="Height"
+                        To="0"  />
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="gird_l2d_correct"
+                        Storyboard.TargetProperty="Height"
+                        To="0"  />
+    </Storyboard>
+
+    
+    
+    <Storyboard x:Key="is_tutorial_manu_open_animation">
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="grid_tutorialmanu"
+                        Storyboard.TargetProperty="Width"
+                        To="270"  />
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="grid_tutorialmanu"
+                        Storyboard.TargetProperty="Width"
+                        To="270"  />
+    </Storyboard>
+    <Storyboard x:Key="is_tutorial_manu_close_animation">
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="grid_tutorialmanu"
+                        Storyboard.TargetProperty="Width"
+                        To="0"  />
+        <DoubleAnimation
+                        Duration="0:0:0.12"
+                        Storyboard.TargetName="grid_tutorialmanu"
+                        Storyboard.TargetProperty="Width"
+                        To="0"  />
+    </Storyboard>
+
+    
+    
+    <Style x:Key="ManuRadioButton" TargetType="RadioButton" >
+        <Setter Property="FontSize" Value="12"></Setter>
+        <Setter Property="Height" Value="25"></Setter>
+        <Setter Property="Foreground" Value="#444"></Setter>
+        <Setter Property="Template" >
+            <Setter.Value>
+                <ControlTemplate  TargetType="{x:Type RadioButton}">
+                    <Grid x:Name="back" Background="Transparent" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                            <ColumnDefinition Width="5"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="10"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Border  x:Name="x1" Width="3"  Visibility="Collapsed" Grid.Column="0">
+                        </Border>
+                        <Border Grid.Column="1" Visibility="{Binding IsPlayVisibility}" Margin="10,0,10,0">
+                            <TextBlock HorizontalAlignment="Left"
+                            FontSize="14" FontFamily="/CloudMusic;component/Resources/#SF2015"     
+                            Text="{TemplateBinding Tag}" Foreground="{DynamicResource DMMainColor}"
+                            VerticalAlignment="Center" ></TextBlock>
+                        </Border>
+                        <Border Grid.Column="3"  x:Name="x">
+                            <TextBlock x:Name="Content" Text="{TemplateBinding Content}" 
+                            HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14"></TextBlock>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true" >
+                            <Setter Property="Background" TargetName="back" Value="#FFF5F5F7"></Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="Visibility" TargetName="x1" Value="Visible"></Setter>
+                            <Setter Property="BorderThickness" TargetName="x1" Value="0"></Setter>
+                            <Setter Property="Foreground" TargetName="Content" Value="#FF333333"></Setter>
+                            <Setter Property="Background" TargetName="back" Value="#FFE3E3E5"></Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="CatScrollViewer"
+       TargetType="{x:Type ScrollViewer}">
+        <Setter Property="OverridesDefaultStyle"
+          Value="True" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid>
+                        <Border  Background="Transparent" >
+                            <ScrollContentPresenter />
+                        </Border>
+                        <ScrollBar x:Name="PART_VerticalScrollBar"
+                     Value="{TemplateBinding VerticalOffset}"
+                     Maximum="{TemplateBinding ScrollableHeight}"
+                     ViewportSize="{TemplateBinding ViewportHeight}"
+                                   HorizontalAlignment="Right" 
+                                   Grid.Column="1" 
+                     Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Background="Transparent" BorderBrush="Transparent">
+                            <ScrollBar.Template>
+                                <ControlTemplate TargetType="ScrollBar">
+                                    <Grid  Background="Transparent" HorizontalAlignment="Right" Width="3">
+                                        <Track HorizontalAlignment="Center" Name="PART_Track" Width="{TemplateBinding Width}" Maximum="{TemplateBinding Maximum}" Minimum="{TemplateBinding Minimum}"
+                                    Value="{TemplateBinding Value}"  IsDirectionReversed="true" Grid.Row="1">
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton  Command="ScrollBar.LineUpCommand"  Height="auto" Background="Transparent" BorderBrush="Transparent"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.Thumb>
+                                                <Thumb   Background="DarkGray" BorderBrush="Transparent"/>
+                                            </Track.Thumb >
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton  Command="ScrollBar.LineDownCommand" Height="auto"  Background="Transparent" BorderBrush="Transparent"/>
+                                            </Track.IncreaseRepeatButton>
+                                        </Track>
+                                            
+                                    </Grid>
+                                </ControlTemplate>
+                            </ScrollBar.Template>
+
+
+                        </ScrollBar>
+                        <ScrollBar x:Name="PART_HorizontalScrollBar"
+                     Orientation="Horizontal"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     Value="{TemplateBinding HorizontalOffset}"
+                     Maximum="{TemplateBinding ScrollableWidth}"
+                     ViewportSize="{TemplateBinding ViewportWidth}"
+                     Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+
+
+
+
+
+
+
+</ResourceDictionary>

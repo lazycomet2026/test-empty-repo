@@ -1,0 +1,25 @@
+name: Build Windows EXE
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+    - name: Build
+      run: |
+        $sln = Get-ChildItem -Path . -Filter *.sln -Recurse | Select-Object -First 1
+        msbuild $sln.FullName /p:Configuration=Release /p:Platform=x64
+    - name: Package
+      run: |
+        mkdir Output
+        Copy-Item -Path "x64\Release\*.exe" -Destination "Output" -Force
+        Copy-Item -Path "img" -Destination "Output" -Recurse -Force
+        Copy-Item -Path "sound" -Destination "Output" -Recurse -Force
+        Copy-Item -Path "*.json" -Destination "Output" -Force
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: BongoCat-EXE
+        path: Output/

@@ -1,0 +1,21 @@
+﻿<Page x:Class="MyWpfApp.PageSupportme"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyWpfApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="PageSupportme">
+
+    <Grid>
+        <TextBlock Text="来做我的小粉丝" Margin="157,284,-157,-284" FontSize="20" Foreground="#FF00B1FF" />
+        <TextBlock Text="投喂猫粮" Margin="533,284,-157,-284" FontSize="20" Foreground="#FF946CE6" />
+        <Image Source="Resources/support/bilibililogo.png" Width="300" Margin="73,-77,427,77" MouseDown="click_bilibili" Cursor="Hand"/>
+        <StackPanel Orientation="Horizontal" Height="198" Width="300"  Margin="-73,127,-426,275" >
+            <Image Source="Resources/support/aifadianlogo.png" Width="80"/>
+            <TextBlock Text="  爱发电" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="50" Foreground="#FF946CE6"/>
+        </StackPanel>
+        <Rectangle  Height="198" Width="300"  Margin="-73,127,-426,275" MouseDown="click_aifadian" Cursor="Hand" Fill="Transparent"/>
+    </Grid>
+</Page>

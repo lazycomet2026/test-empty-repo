@@ -1,0 +1,69 @@
+﻿<Page x:Class="MyWpfApp.PageUpdate"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:winforms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+      xmlns:wpf="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+      xmlns:local="clr-namespace:MyWpfApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="PageUpdate" >
+
+    
+    
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Bongocat_BtnStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    
+    <Grid>
+        <Grid.Resources>
+            <local:UpdateboolConver x:Key="bool2updatestring"/>
+            <local:de_bool_to_visibility x:Key="de_bool2visibility"/>
+        </Grid.Resources>
+        <Grid x:Name="GridForLoadingSuccess">
+            <StackPanel>
+                <Grid Visibility="{Binding is_lastest,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="当前你已经是最新版啦。" FontSize="22" Margin="15,15,0,10"/>
+                </Grid>
+                <Grid Visibility="{Binding is_lastest,Mode=OneWay,Converter={StaticResource de_bool2visibility}}">
+                    <TextBlock FontSize="22" Margin="15,15,0,10">
+                        <Run Text="发现了更新的版本，"></Run>
+                        <Hyperlink Click="click_download"><Run Text="点击下载"/></Hyperlink>
+                        <Run Text="。"></Run>
+                    </TextBlock>
+                </Grid>
+                <Frame x:Name="serverframe" Source="http://150.158.110.86/bongocatpage/pageupdate.xaml"/>
+            </StackPanel>
+        </Grid>
+
+        
+        
+        
+        <Grid x:Name="GridForLoadingFailure" Visibility="Collapsed">
+            <Image Source="Resources/cat_unload.png" Width="500" Margin="0,0,0,0"/>
+            <TextBlock Text="可恶，连接失败了" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+        </Grid>
+
+
+
+
+
+
+
+        <Grid Height="100" Width="100" Visibility="{Binding isloading,Mode=OneWay,Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ProgressBar
+  Style="{StaticResource MaterialDesignCircularProgressBar}"
+  Value="30"
+  IsIndeterminate="True"
+  x:Name="IndeterminateToDeterminateCircularProgress" Height="100" Width="100" >
+            </ProgressBar>
+            <TextBlock Text="连接中…" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
+        </Grid>
+    </Grid>
+</Page>

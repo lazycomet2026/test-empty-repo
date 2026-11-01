@@ -1,0 +1,268 @@
+﻿<Page x:Class="MyWpfApp.PageHome"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:MyWpfApp"
+      mc:Ignorable="d" 
+      d:DesignHeight="620"
+      Title="Page1" Background="Transparent"  Loaded="Page_Loaded" Width="1000" VerticalAlignment="Top" >
+    <Page.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.PopupBox.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.TextBlock.xaml" />
+                <!-- throw in some extra colour for our floating action button -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Green.Named.Primary.xaml" />
+                <ResourceDictionary Source="Bongocat_BtnStyle.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </Page.Resources>
+
+
+
+    <Grid Width="1000" Height="620" HorizontalAlignment="Left" Background="Transparent"  >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="123*"/>
+            <RowDefinition Height="32*"/>
+        </Grid.RowDefinitions>
+        <!--Rectangle Margin="0,20,35,0" Grid.RowSpan="2" Fill="#01FFFFFF" /-->
+        <Rectangle Margin="0,20,845,192" Fill="#01FFFFFF" />
+        <materialDesign:Card HorizontalAlignment="Left" Height="600" Margin="155,20,0,0" VerticalAlignment="Top" Width="800"  Grid.RowSpan="2">
+            <Frame Content="Frame"  NavigationUIVisibility="Hidden" Name="Show_Page" Source="setting_cat.xaml" />
+        </materialDesign:Card>
+        <Grid Width="200" MinWidth="200" Margin="0,20,0,0" HorizontalAlignment="Left" Grid.RowSpan="2" >
+            <Grid Margin="0,6,0,4"  >
+
+
+                <!--<Button x:Name="button_window_set" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,50,50,490" Height="Auto" Style="{StaticResource BongoCat_ManuButton }" Click="button_window_set_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Kind="WindowMaximize"
+                           Height="28.667"
+                            Width="25.833" Margin="0,0,10,0" />
+                        <TextBlock TextWrapping="Wrap" Text="窗口设置" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27"  />
+                    </StackPanel>
+                </Button>-->
+                <Button x:Name="button_tutorial" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,50,50,490" Height="Auto" Style="{StaticResource BongoCat_ManuButton }" Click="button_tutorial_Click" MouseEnter="botton_btn_MouseEnter" MouseLeave="botton_btn_MouseLeave">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Kind="BookOpenVariant"
+                           Height="28.667"
+                            Width="25.833" Margin="0,0,10,0" />
+                        <TextBlock x:Name="text_tutorial" TextWrapping="Wrap" Text="使用教程" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27"  />
+                    </StackPanel>
+                </Button>
+                <!--<Button x:Name="button_FAQ" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,150,50,390" Height="Auto" Style="{StaticResource BongoCat_ManuButton }">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Kind="QuestionMarkCircleOutline"
+                           Height="28.667"
+                            Width="25.833" Margin="0,0,10,0" />
+                        <TextBlock TextWrapping="Wrap" Text="常见问题" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27"  />
+                    </StackPanel>
+                </Button>-->
+                <Button x:Name="button_feedback_and_communicate" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,100,50,440" Height="Auto" Style="{StaticResource BongoCat_ManuButton }" Click="button_feedback_and_communicate_Click" MouseEnter="botton_btn_MouseEnter" MouseLeave="botton_btn_MouseLeave">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Kind="MessageProcessingOutline"
+                           Height="28.667"
+                            Width="25.833" Margin="0,0,10,0" />
+                        <TextBlock TextWrapping="Wrap" Text="反馈交流" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27"  />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="button_download_updates" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,150,50,390" Height="Auto" Style="{StaticResource BongoCat_ManuButton }" Click="button_download_updates_Click" MouseEnter="botton_btn_MouseEnter" MouseLeave="botton_btn_MouseLeave">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Kind="ArrowCollapseDown"
+                           Height="28.667"
+                            Width="25.833" Margin="0,0,10,0" />
+                        <TextBlock TextWrapping="Wrap" Text="下载更新" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27"  />
+                    </StackPanel>
+                </Button>
+                <Button x:Name="button_donate" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,200,50,340" Height="Auto" Style="{StaticResource BongoCat_ManuButton }" Click="button_donate_Click" MouseEnter="botton_btn_MouseEnter" MouseLeave="botton_btn_MouseLeave">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon
+                            Kind="FlashOutline"
+                           Height="28.667"
+                            Width="25.833" Margin="0,0,10,0" />
+                        <TextBlock TextWrapping="Wrap" Text="支持作者" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" HorizontalAlignment="Center" Width="80" Height="27"  />
+                    </StackPanel>
+                </Button>
+
+
+
+
+
+
+
+
+
+
+
+                <Button x:Name="botton_cat_set" Background="#FFFFA0E1" BorderBrush="{x:Null}" Foreground="#DDFFFFFF" Margin="0,0,50,540" Height="Auto" Style="{StaticResource BongoCat_ManuButton }" Click="botton_cat_set_Click" MouseEnter="botton_btn_MouseEnter" MouseLeave="botton_btn_MouseLeave">
+
+
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Grid Height="28.667" Width="25.833" Margin="0,0,10,0">
+                            <TextBlock Text="A" FontSize="20" FontFamily="./Resources/#caticon"  HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Normal" Margin="2,0,1.833,2.667"  />
+                        </Grid>
+                        <TextBlock TextWrapping="Wrap" Text="猫咪设置" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Normal" FontSize="20" Height="27"  />
+
+                    </StackPanel>
+
+                </Button>
+            </Grid>
+        </Grid>
+
+        <Rectangle HorizontalAlignment="Left" Height="60" Margin="934,6,0,0" VerticalAlignment="Top" Width="60" Fill="#00933636">
+            <Rectangle.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation To="1" Storyboard.TargetName="close_btn_scale" Storyboard.TargetProperty="ScaleX"  Duration="0:0:0.1"/>
+                                <DoubleAnimation To="1"   Storyboard.TargetName="close_btn_scale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation To="0.7" Storyboard.TargetName="close_btn_scale" Storyboard.TargetProperty="ScaleX" Duration="0:0:0.1"/>
+                                <DoubleAnimation To="0.7" Storyboard.TargetName="close_btn_scale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Rectangle.Triggers>
+        </Rectangle>
+
+
+
+
+
+
+
+
+
+        <Button x:Name="btn_window_close"
+  Style="{StaticResource MaterialDesignFloatingActionMiniButton}" 
+
+  ToolTip="保存设置后关闭" Margin="964,6,0,456"  BorderBrush="{x:Null}" Height="Auto" Width="30" RenderTransformOrigin="0.5,0.5" Click="btn_window_close_Click" HorizontalAlignment="Left">
+
+            <Button.Background>
+                <SolidColorBrush x:Name="color_close_btn" Color="#FFCDCDCD"/>
+
+            </Button.Background>
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="0.7" ScaleY="0.7" x:Name="close_btn_scale"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform />
+                </TransformGroup>
+            </Button.RenderTransform>
+            <materialDesign:PackIcon
+    Kind="WindowClose"
+    Height="24"
+    Width="24" />
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#FFFF0000" Storyboard.TargetName="color_close_btn" Storyboard.TargetProperty="Color" Duration="0:0:0.1"/>
+                                <DoubleAnimation To="1" Storyboard.TargetName="close_btn_scale" Storyboard.TargetProperty="ScaleX"  Duration="0:0:0.1"/>
+                                <DoubleAnimation To="1"   Storyboard.TargetName="close_btn_scale" Storyboard.TargetProperty="ScaleY" Duration="0:0:0.1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#FFCDCDCD" Duration="0:0:0.1" Storyboard.TargetName="color_close_btn" Storyboard.TargetProperty="Color"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+
+            </Button.Triggers>
+        </Button>
+        <Rectangle  x:Name="rect_move_window" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="956"  MouseLeftButtonDown="Move_MouseLeftButtonDown">
+            <Rectangle.Fill>
+                <SolidColorBrush x:Name="windowmove_btn_color" Color="#526F6FC1"/>
+            </Rectangle.Fill>
+            <Rectangle.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#826F6FC1" Duration="0:0:0.1" Storyboard.TargetName="windowmove_btn_color" Storyboard.TargetProperty="Color" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#526F6FC1" Duration="0:0:0.1" Storyboard.TargetName="windowmove_btn_color" Storyboard.TargetProperty="Color"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeftButtonDown">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#7D6F316A" Duration="0:0:0.1" Storyboard.TargetName="windowmove_btn_color" Storyboard.TargetProperty="Color"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeftButtonUp">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation To="#826F6FC1" Duration="0:0:0.1" Storyboard.TargetName="windowmove_btn_color" Storyboard.TargetProperty="Color"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Rectangle.Triggers>
+        </Rectangle>
+
+
+
+
+
+
+
+    </Grid>
+</Page>

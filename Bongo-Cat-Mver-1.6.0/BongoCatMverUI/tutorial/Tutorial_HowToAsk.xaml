@@ -1,0 +1,88 @@
+﻿<Page x:Class="MyWpfApp.tutorial.Tutorial_HowToAsk"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MyWpfApp.tutorial"
+      mc:Ignorable="d" 
+      d:DesignWidth="800"
+      Title="Tutorial_HowToAsk">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Bongocat_BtnStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <StackPanel Margin="80,0,0,0">
+            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="如何正确地提问与反馈" FontSize="30" VerticalAlignment="Top" Height="38"/>
+            <ScrollViewer Margin="0,10,0,0" Focusable="False" Height="542"
+                        CanContentScroll="False"
+                        Style="{StaticResource CatScrollViewer}">
+
+                <StackPanel>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        自从开设反馈群以来，我发现很多人根本不知道该怎么提问。不止有关猫咪，在网络上对任何东西进行提问与反馈前，您都应该知道以下内容。因此，如果您需要到对猫咪进行提问与反馈，请先通读这篇本不该是教程的教程页。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="哪些问题不能问" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="    能很轻易搜索到答案的问题" FontWeight="Bold"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        现代社会“搜索”是一个和进食同等重要的基本生存技能，很多问题你能轻易地在网络上找到图文并茂的教程，然而你寻找群友只会得到一堆生涩的文字描述，善用搜索能为你和他人都节约很多时间。举例：如果你想提问OBS是什么，请直接百度“OBS”。如果你想知道OBS怎么使用，请在B站搜索“OBS教程”。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                        <Run Text="    能很轻易在文档中找到答案的问题" FontWeight="Bold"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        现在很多软件的网页或者软件自身都会附带很多的说明文档。您现在在阅览的猫咪教程正是包括在其中的。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                        <Run Text="    能轻易通过实践或尝试得到答案的问题" FontWeight="Bold"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        举个直观的例子，不要问“把****改成false就好了吗？”、“是不是需要进行******的操作？”。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="学会描述问题" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        回答问题的过程不应该是一个回答者对提问者的描述的解谜过程。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        依然使用一个直观的例子，如果你的猫咪动不了了，你不该只是问“我猫咪动不了了怎么办？”，你应该描述猫咪哪部分动不了，是右手动不了还是左手动不了，还是整只都不动了，是直播软件画面中动不了，还是猫咪窗口中动不了。你还应该描述你做了什么使猫咪动不了了，是启动猫咪时就动不了了，还是最小化猫咪后动不了了，还是修改config后动不了了，还是打开了游戏后动不了了。这些都是你应该主动描述的，而不是让回答者来揣测的。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        除此之外，每个人的脑回路也不同，所以请描述问题的时候尽量不要用有歧义的描述。"/>
+                    </TextBlock>
+                    <Image Source="../Resources/tutorial/img_tutorial_9.png" Width="300"/>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="学会附带图片和视频" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        本来是应该包括在“学会描述问题”里的，但这项真的很重要所以单独列出来了。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        永远不要对自己的描述能力太自信，在文字描述之外附带图片和视频能帮助回答者更准确了解你的问题所在。比如，如果你因为修改了素材和config文件而导致各种猫咪问题需要进行提问的时候，请附带问题截图、自己的图片文件夹截图、config.json文件内容截图。"/>
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="20" VerticalAlignment="Top" >
+                <Run Text="学会感谢" FontWeight="Bold" />
+                    </TextBlock>
+                    <TextBlock Margin="10,10,10,0" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                <Run Text="        本软件是免费软件，反馈交流群中，包括我在内的任何人都没有回答问题的义务，能回答你问题的人都是值得感谢的人。"/>
+                    </TextBlock>
+
+                    <TextBlock Margin="10,10,10,100" TextWrapping="Wrap"  FontSize="14" VerticalAlignment="Top" >
+                        <Hyperlink Click="Hyperlink_Click"><Run Text="了解更多关于如何提问的内容"/></Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+            </ScrollViewer>
+        </StackPanel>
+    </Grid>
+</Page>

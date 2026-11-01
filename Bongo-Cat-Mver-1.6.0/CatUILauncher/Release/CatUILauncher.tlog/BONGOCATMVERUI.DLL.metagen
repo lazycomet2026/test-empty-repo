@@ -1,0 +1,426 @@
+  BongoCatMverUI.g.resources - Embedded, ContainedInManifestFile, 
+  MyWpfApp.Properties.Resources.resources - Embedded, ContainedInManifestFile, 
+ImageRuntimeVersion: v4.0.30319
+Assembly BongoCatMverUI, Version=1.0.*, Culture=固定语言(固定国家/地区): 
+	hash=SHA1, flags=PublicKey
+Assembly mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly PresentationFramework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Assembly System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Assembly PresentationCore, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35: 
+	hash=None, flags=None
+Assembly System.Xaml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089: 
+	hash=None, flags=None
+Assembly MaterialDesignThemes.Wpf, Version=3.0.*, Culture=固定语言(固定国家/地区): 
+	hash=None, flags=None
+Class XamlGeneratedNamespace.GeneratedInternalTypeHelper: AutoLayout, AnsiClass, Class, Public, Sealed, BeforeFieldInit
+  :System.Windows.Markup.InternalTypeHelper
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+Class MyWpfApp.configdata: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.ComponentModel.INotifyPropertyChanged
+  Fields:
+    Boolean livecache : Public
+    Int32 decoration_width : Public
+    Int32 decoration_height : Public
+    Int32 decoration_offsetXforMouse : Public
+    Int32 decoration_offsetYforMouse : Public
+    Double decoration_scalarForMouse : Public
+    Int32 decoration_offsetXforPen : Public
+    Int32 decoration_offsetYforPen : Public
+    Double decoration_scalarForPen : Public
+    Int32[] decoration_armLineColor : Public
+    Int32 decoration_emoticonClear : Public
+    Int32 decoration_correct : Public
+    Boolean workarea_workarea : Public
+    Int32[] workarea_topLeft : Public
+    Int32[] workarea_rightBottom : Public
+    System.Collections.ArrayList standard_mouseLeft : Public
+    System.Collections.ArrayList standard_mouseRight : Public
+    System.Collections.ArrayList standard_mouseSide : Public
+    System.Collections.ArrayList standard_keyboard : Public
+    System.Collections.ArrayList standard_hand : Public
+    System.Collections.ArrayList standard_face : Public
+    System.Collections.ArrayList standard_sounds : Public
+    Boolean standard_faceOn : Public
+    Boolean standard_soundsOn : Public
+    System.Collections.ArrayList keyboard_keyboard : Public
+    System.Collections.ArrayList keyboard_leftHand : Public
+    System.Collections.ArrayList keyboard_rightHand : Public
+    System.Collections.ArrayList keyboard_face : Public
+    System.Collections.ArrayList keyboard_sounds : Public
+    Boolean keyboard_faceOn : Public
+    Boolean keyboard_soundsOn : Public
+  Properties:
+    Int32 mode 'get set' : 
+    Int32 mode2 'get set' : 
+    Boolean decoration_leftHanded 'get set' : 
+    Int32[] decoration_rgb 'get set' : 
+    Int32 decoration_framerateLimit 'get set' : 
+    Boolean decoration_topWindow 'get set' : 
+    Boolean decoration_emoticonKeep 'get set' : 
+    Boolean decoration_soundKeep 'get set' : 
+    Double decoration_l2dCorrect 'get set' : 
+    Boolean decoration_l2dHorizontal 'get set' : 
+    Boolean decoration_mouseForceMove 'get set' : 
+    Boolean decoration_desktopPet 'get set' : 
+    Boolean standard_mouse 'get set' : 
+    Boolean Standard_mouse 'get set' : 
+  Events:
+    System.ComponentModel.PropertyChangedEventHandler PropertyChanged: 
+  Methods:
+    get_mode(): PrivateScope, Public, HideBySig, SpecialName
+    set_mode(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_mode2(): PrivateScope, Public, HideBySig, SpecialName
+    set_mode2(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_leftHanded(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_leftHanded(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_rgb(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_rgb(Int32[]): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_framerateLimit(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_framerateLimit(Int32): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_topWindow(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_topWindow(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_emoticonKeep(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_emoticonKeep(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_soundKeep(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_soundKeep(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_l2dCorrect(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_l2dCorrect(Double): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_l2dHorizontal(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_l2dHorizontal(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_mouseForceMove(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_mouseForceMove(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_decoration_desktopPet(): PrivateScope, Public, HideBySig, SpecialName
+    set_decoration_desktopPet(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_standard_mouse(): PrivateScope, Public, HideBySig, SpecialName
+    set_standard_mouse(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_Standard_mouse(): PrivateScope, Public, HideBySig, SpecialName
+    set_Standard_mouse(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    add_PropertyChanged(PropertyChangedEventHandler): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName
+    remove_PropertyChanged(PropertyChangedEventHandler): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName
+Class MyWpfApp.CommonData: AutoLayout, AnsiClass, Class, Public, Abstract, Sealed, BeforeFieldInit
+  Fields:
+    IntPtr HWND_catUIThread : Public, Static
+    UInt64 ID_catUIThread : Public, Static
+    IntPtr HWND_UIwindow : Public, Static
+    MyWpfApp.configdata config : Public, Static
+    MyWpfApp.version version : Public, Static
+    Boolean configflag : Public, Static
+    Boolean configChangeflag : Public, Static
+    System.Windows.Controls.Frame tutorialframe : Public, Static
+    System.Windows.Controls.Primitives.ToggleButton manuToggle_page : Public, Static
+    System.Windows.Controls.TreeView manu_tutorial : Public, Static
+    Int32 USER = 1024 : Public, Static, Literal, HasDefault
+    Int32 UIWM_CLOSE = 1124 : Public, Static, Literal, HasDefault
+    Int32 UIWM_WRITECONFIG = 1026 : Public, Static, Literal, HasDefault
+    Int32 UIWM_WRITECONFIG_AND_RELOAD_FILE = 1027 : Public, Static, Literal, HasDefault
+  Methods:
+    PostMessage(IntPtr, Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    PostThreadMesssage(UInt64, UInt32, Int32, Int32): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    sendCloseMessage(): PrivateScope, Public, Static, HideBySig
+    readcatcfg(): PrivateScope, Public, Static, HideBySig
+    writecatcfg(): PrivateScope, Public, Static, HideBySig
+    writecatcfg_and_reloadfile(): PrivateScope, Public, Static, HideBySig
+Class MyWpfApp.bool_swap: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.de_bool_to_visibility: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.ModeConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.l2dMode2visibilityConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.EmoticonKeepConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.SoundKeepConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.UpdateboolConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.rgb2SolidColorBrushConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.rgb2SolidColorBrushConver2: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.rgb2colorConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.rgb2rConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.rgb2gConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.rgb2bConver: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Data.IValueConverter
+  Methods:
+    Convert(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    ConvertBack(Object, Type, Object, CultureInfo): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.version: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.ComponentModel.INotifyPropertyChanged
+  Fields:
+    System.String version1 : Public, Static
+    System.String version2 : Public, Static
+    System.String version3 : Public, Static
+    System.String version4 : Public, Static
+  Properties:
+    Boolean is_lastest 'get set' : 
+  Events:
+    System.ComponentModel.PropertyChangedEventHandler PropertyChanged: 
+  Methods:
+    get_is_lastest(): PrivateScope, Public, HideBySig, SpecialName
+    set_is_lastest(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    is_lastestversion(String, String, String, String): PrivateScope, Public, Static, HideBySig
+    add_PropertyChanged(PropertyChangedEventHandler): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName
+    remove_PropertyChanged(PropertyChangedEventHandler): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName
+Class MyWpfApp.PageFeedback_and_Communicate: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.PageHome: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.IDisposable
+    System.Windows.Markup.IComponentConnector
+  Fields:
+    Boolean is_window_MouseLeftButtonDown : Public
+    Boolean is_window_closed : Public
+  Methods:
+    Dispose(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+    SendMessage(IntPtr, Int32, Int32, Int32): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    ReleaseCapture(): PrivateScope, Public, Static, HideBySig, PinvokeImpl
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.PageSupportme: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.PageTutorial: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.PageUpdate: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    ReadVerson(): PrivateScope, Public, HideBySig
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.updateStatus: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.ComponentModel.INotifyPropertyChanged
+  Properties:
+    Boolean isloading 'get set' : 
+    Boolean loading_result 'get set' : 
+  Events:
+    System.ComponentModel.PropertyChangedEventHandler PropertyChanged: 
+  Methods:
+    get_isloading(): PrivateScope, Public, HideBySig, SpecialName
+    set_isloading(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    get_loading_result(): PrivateScope, Public, HideBySig, SpecialName
+    set_loading_result(Boolean): PrivateScope, Public, HideBySig, SpecialName
+    add_PropertyChanged(PropertyChangedEventHandler): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName
+    remove_PropertyChanged(PropertyChangedEventHandler): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask, SpecialName
+Class MyWpfApp.setting_cat: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Fields:
+    Int32[] origincolor : Public, Static
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.setting_cat_keyboard_mode: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.setting_cat_standard_mode: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.setting_window: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.Window_ColorPicker: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Window
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Question_BlackBackground: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Question_CatFreeze: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Question_MissingPart: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Question_TopWindow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_AboutBroadcast: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_ConfigComparisonTable: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_DIYCat: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_Homepage: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_HowToAsk: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_HowToUseThisUI: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_Keymap: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_WhatYouMustKnow: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
+Class MyWpfApp.tutorial.Tutorial_Workarea: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
+  :System.Windows.Controls.Page
+    Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Interfaces:
+    System.Windows.Markup.IComponentConnector
+  Methods:
+    InitializeComponent(): PrivateScope, Public, Final, Virtual, HideBySig, VtableLayoutMask
